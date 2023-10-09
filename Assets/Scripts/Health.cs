@@ -7,10 +7,12 @@ public class Health : MonoBehaviour
     public float StartHealth = 3;
 
     private float _currentHealth;
+    private bool _isDead;
     
     void Start()
     {
         _currentHealth = StartHealth;
+        _isDead = false;
     }
     
     public float GetCurrentHealth()
@@ -21,6 +23,11 @@ public class Health : MonoBehaviour
     public float HealthAsPercentage()
     {
         return _currentHealth / StartHealth;
+    }
+
+    public bool IsDead()
+    {
+        return _isDead;
     }
 
     public void ChangeHealth(float delta)
@@ -42,8 +49,11 @@ public class Health : MonoBehaviour
         }
     }
 
+    
+    
     void Dead()
     {
         Debug.Log(this.gameObject.name + " is dead");
+        _isDead = true;
     }
 }

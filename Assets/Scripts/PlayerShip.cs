@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Health))]
 public class PlayerShip : MonoBehaviour, IDamageable
@@ -28,6 +29,11 @@ public class PlayerShip : MonoBehaviour, IDamageable
         {
             _weapon.Fire();
         }
+
+        if (Input.GetKeyDown(KeyCode.R)) // restart
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         
         // wrap around screen
         if (transform.position.x > 9)
@@ -53,5 +59,19 @@ public class PlayerShip : MonoBehaviour, IDamageable
     public void Damage(float dmg)
     {
         _health.ChangeHealth(-dmg);
+
+        if (_health.IsDead())
+        {
+            Debug.Log("player died");
+            // game over
+        }
+        else
+        {
+            // play flashing animation
+            // decrement health in ui
+            // etc
+        }
     }
+    
+    
 }
