@@ -12,11 +12,15 @@ public class PlayerShip : MonoBehaviour, IDamageable
 
     private Weapon _weapon;
     private Health _health;
+    private HitInvincibility _hitInvincibility;
+    
 
     void Awake()
     {
         _weapon = GetComponentInChildren<Weapon>();
         _health = GetComponent<Health>();
+        
+        _hitInvincibility = GetComponent<HitInvincibility>();
     }
     
     void Update()
@@ -58,6 +62,11 @@ public class PlayerShip : MonoBehaviour, IDamageable
 
     public void Damage(float dmg)
     {
+        if (_hitInvincibility != null && _hitInvincibility.IsActive())
+        {
+            return;
+        }
+        
         _health.ChangeHealth(-dmg);
 
         if (_health.IsDead())
@@ -67,11 +76,16 @@ public class PlayerShip : MonoBehaviour, IDamageable
         }
         else
         {
+            if (_hitInvincibility != null)
+            {
+                _hitInvincibility.StartInvincibility();
+            }
             // play flashing animation
             // decrement health in ui
             // etc
         }
     }
+    
     
     
 }
