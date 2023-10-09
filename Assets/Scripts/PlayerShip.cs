@@ -1,16 +1,40 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerShip : MonoBehaviour
+[RequireComponent(typeof(Health))]
+public class PlayerShip : MonoBehaviour, IDamageable
 {
-    private float MovementSpeed = 2f;
-    private float RotationSpeed = 200f;
+    public float MovementSpeed = 2f;
+    public float RotationSpeed = 200f;
+
+    private Weapon _weapon;
+    private Health _health;
+
+    void Awake()
+    {
+        _weapon = GetComponentInChildren<Weapon>();
+        _health = GetComponent<Health>();
+    }
     
     void Update()
     {
         // input handling
         transform.position += transform.up * (Input.GetAxisRaw("Vertical") * Time.deltaTime * MovementSpeed);
         transform.Rotate(0, 0, Input.GetAxisRaw("Horizontal") * Time.deltaTime * RotationSpeed * -1);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _weapon.Fire();
+        }
+        
+
+        
+    }
+
+    public void Damage(float dmg)
+    {
+        _health.ChangeHealth(-dmg);
     }
 }
