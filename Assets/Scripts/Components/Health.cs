@@ -37,23 +37,20 @@ public class Health : MonoBehaviour
         return _isDead;
     }
 
-    public void ChangeHealth(float delta)
+    public void TakeDamage(float dmg)
     {
-        _currentHealth += delta;
-
-        if (delta < 0)
-        {
-            Debug.Log(this.gameObject.name + " took damage");
-        }
-        else
-        {
-            Debug.Log(this.gameObject.name + " healed");
-        }
-
+        _currentHealth -= dmg;
+        
         if (_currentHealth <= 0)
         {
             Dead();
         }
+    }
+
+    public void AddHealth(float amount)
+    {
+        _currentHealth += amount;
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
     }
 
     

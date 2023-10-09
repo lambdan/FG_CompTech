@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 58225851442430869}
   - component: {fileID: 4996380193660966653}
   - component: {fileID: 5683452517959385620}
+  - component: {fileID: 6045774606876647812}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Enemy2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a22e9560d6fcc64b964806011eedbf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartHealth: 1
+  StartHealth: 2
 --- !u!60 &4996380193660966653
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -112,7 +113,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa2c6dfcc4ef5934b8e61dfee6328eee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MovementSpeed: 0.7
+  MovementSpeed: 0.2
+--- !u!114 &6045774606876647812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3911293155193878859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc48d527e2f80f46bde272d52cf6695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Duration: 1
 --- !u!1 &5894950036649422914
 GameObject:
   m_ObjectHideFlags: 0
@@ -187,7 +201,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 2747690628134850419, guid: 16037dbd798344f57a526d53d48f5ead, type: 3}
-  m_Color: {r: 1, g: 0.44895163, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.02505207, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

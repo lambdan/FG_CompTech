@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Health))]
-public class PlayerShip : MonoBehaviour, IDamageable
+public class PlayerShip : MonoBehaviour, IDamageable, IHealable
 {
     public float MovementSpeed = 2f;
     public float RotationSpeed = 200f;
@@ -13,10 +13,17 @@ public class PlayerShip : MonoBehaviour, IDamageable
     private Weapon _weapon;
     private Health _health;
     private HitInvincibility _hitInvincibility;
-    
 
+    public static PlayerShip Instance;
+    
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        Instance = this;
+        
         _weapon = GetComponentInChildren<Weapon>();
         _health = GetComponent<Health>();
         
@@ -67,7 +74,7 @@ public class PlayerShip : MonoBehaviour, IDamageable
             return;
         }
         
-        _health.ChangeHealth(-dmg);
+        _health.TakeDamage(dmg);
 
         
 
@@ -90,7 +97,11 @@ public class PlayerShip : MonoBehaviour, IDamageable
             // etc
         }
     }
-    
-    
-    
+
+
+    public void Heal(float amount)
+    {
+        _health.AddHealth(amount);
+        GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+    }
 }

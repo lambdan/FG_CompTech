@@ -49,6 +49,12 @@ public class GameManager : MonoBehaviour
     public void AddKill()
     {
         _kills += 1;
+
+        if (_kills % 10 == 0)
+        {
+            PlayerShip.Instance.Heal(1); // heal every 10 kills
+        }
+        
         UpdateKillsText();
     }
 

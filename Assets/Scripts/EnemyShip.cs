@@ -7,36 +7,46 @@ using UnityEngine;
 public class EnemyShip : MonoBehaviour, IDamageable
 {
     public float MovementSpeed = 1.5f;
-    // public float RotationSpeed = 200f;
-
-    private Weapon _weapon;
     private Health _health;
-    private Vector3 _destination;
+    private HitInvincibility _hitInvincibility;
 
     void Awake()
     {
-        _weapon = GetComponentInChildren<Weapon>();
         _health = GetComponent<Health>();
-        
-    }
-
-    void Start()
-    {
-        _destination = FindObjectOfType<PlayerShip>().transform.position;
+        _hitInvincibility = GetComponent<HitInvincibility>();
     }
     
     void FixedUpdate()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _destination, MovementSpeed * Time.fixedDeltaTime);
+        if (PlayerShip.Instance == null)
+        {
+            return;
+        }
+
+        transform.position = Vector3.MoveTowards(transform.position, PlayerShip.Instance.transform.position, MovementSpeed * Time.fixedDeltaTime);
+
     }
 
     public void Damage(float dmg)
     {
-        _health.ChangeHealth(-dmg);
+        if (_hitInvincibility != null && _hitInvincibility.IsActive())
+        {
+            return;
+        }
+        
+        _health.TakeDamage(dmg);
+        
         if (_health.IsDead())
         {
             GameManager.Instance.AddKill();
             Destroy(this.gameObject);
+        }
+        else
+        {
+            if (_hitInvincibility != null)
+            {
+                _hitInvincibility.StartInvincibility();
+            }
         }
     }
 
