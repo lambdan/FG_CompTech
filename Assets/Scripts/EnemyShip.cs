@@ -25,9 +25,9 @@ public class EnemyShip : MonoBehaviour, IDamageable
         _playerShip = FindObjectOfType<PlayerShip>();
     }
     
-    void Update()
+    void FixedUpdate()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _playerShip.transform.position, MovementSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _playerShip.transform.position, MovementSpeed * Time.fixedDeltaTime);
     }
 
     public void Damage(float dmg)
