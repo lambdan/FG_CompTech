@@ -22,6 +22,11 @@ public class PlayerShip : MonoBehaviour, IDamageable
         
         _hitInvincibility = GetComponent<HitInvincibility>();
     }
+
+    void Start()
+    {
+        GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+    }
     
     void Update()
     {
@@ -34,11 +39,6 @@ public class PlayerShip : MonoBehaviour, IDamageable
             _weapon.Fire();
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) // restart
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        
         // wrap around screen
         if (transform.position.x > 9)
         {
@@ -69,10 +69,12 @@ public class PlayerShip : MonoBehaviour, IDamageable
         
         _health.ChangeHealth(-dmg);
 
+        
+
         if (_health.IsDead())
         {
-            Debug.Log("player died");
-            // game over
+            GameManager.Instance.GameOver();
+            Destroy(this.gameObject);
         }
         else
         {
@@ -80,8 +82,11 @@ public class PlayerShip : MonoBehaviour, IDamageable
             {
                 _hitInvincibility.StartInvincibility();
             }
+            
+            
+            GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+            
             // play flashing animation
-            // decrement health in ui
             // etc
         }
     }

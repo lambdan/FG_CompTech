@@ -21,6 +21,8 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         StartCoroutine(SpawnCoroutine());
+        
+        
     }
 
     Vector3 RandomPoint()
@@ -35,7 +37,7 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnCoroutine()
     {
-        while (true) // TODO check if player is still alive
+        while (!GameManager.Instance.IsGameOver())
         {
             for (int i = 0; i < SpawnsPerFrequency; i++)
             {

@@ -7,11 +7,13 @@ public class Health : MonoBehaviour
     public float StartHealth = 3;
 
     private float _currentHealth;
+    private float _maxHealth;
     private bool _isDead;
     
     void Start()
     {
         _currentHealth = StartHealth;
+        _maxHealth = StartHealth;
         _isDead = false;
     }
     
@@ -19,10 +21,15 @@ public class Health : MonoBehaviour
     {
         return _currentHealth;
     }
+
+    public float GetMaxHealth()
+    {
+        return _maxHealth;
+    }
     
     public float HealthAsPercentage()
     {
-        return _currentHealth / StartHealth;
+        return _currentHealth / _maxHealth;
     }
 
     public bool IsDead()

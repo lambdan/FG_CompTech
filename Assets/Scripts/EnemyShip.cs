@@ -11,7 +11,7 @@ public class EnemyShip : MonoBehaviour, IDamageable
 
     private Weapon _weapon;
     private Health _health;
-    private PlayerShip _playerShip;
+    private Vector3 _destination;
 
     void Awake()
     {
@@ -22,12 +22,12 @@ public class EnemyShip : MonoBehaviour, IDamageable
 
     void Start()
     {
-        _playerShip = FindObjectOfType<PlayerShip>();
+        _destination = FindObjectOfType<PlayerShip>().transform.position;
     }
     
     void FixedUpdate()
     {
-        transform.position = Vector3.MoveTowards(transform.position, _playerShip.transform.position, MovementSpeed * Time.fixedDeltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _destination, MovementSpeed * Time.fixedDeltaTime);
     }
 
     public void Damage(float dmg)
@@ -35,11 +35,12 @@ public class EnemyShip : MonoBehaviour, IDamageable
         _health.ChangeHealth(-dmg);
         if (_health.IsDead())
         {
+            GameManager.Instance.AddKill();
             Destroy(this.gameObject);
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D col) // Damage ship?
     {
         IDamageable id = col.gameObject.GetComponent<IDamageable>();
         if (id != null)
