@@ -54,6 +54,11 @@ public class GameManager : MonoBehaviour
         {
             PlayerShip.Instance.Heal(1); // heal every 10 kills
         }
+
+        if (_kills % 100 == 0)
+        {
+            PlayerShip.Instance.AddMaxHealth(1); // add max health every 100 kills
+        }
         
         UpdateKillsText();
     }

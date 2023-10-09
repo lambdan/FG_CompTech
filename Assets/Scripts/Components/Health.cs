@@ -53,6 +53,11 @@ public class Health : MonoBehaviour
         _currentHealth = Mathf.Clamp(_currentHealth, 0, _maxHealth);
     }
 
+
+    public void AddMaxHealth(float amount)
+    {
+        _maxHealth += amount;
+    }
     
     
     void Dead()

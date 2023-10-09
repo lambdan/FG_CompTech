@@ -34,7 +34,7 @@ public class HitInvincibility : MonoBehaviour
         while (started + Duration > Time.realtimeSinceStartup)
         {
             _spriteRenderer.enabled = !_spriteRenderer.enabled; // flicker
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForSeconds(0.1f);
         }
 
         _spriteRenderer.enabled = true;
