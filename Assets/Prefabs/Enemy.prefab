@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6445213276386416880}
   - component: {fileID: 58225851442430869}
-  - component: {fileID: 4996380193660966653}
   - component: {fileID: 5683452517959385620}
+  - component: {fileID: 7522609128878533039}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -48,8 +48,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartHealth: 1
---- !u!60 &4996380193660966653
-PolygonCollider2D:
+--- !u!114 &5683452517959385620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3911293155193878859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2c6dfcc4ef5934b8e61dfee6328eee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MovementSpeed: 0.7
+--- !u!58 &7522609128878533039
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -81,38 +94,8 @@ PolygonCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: -0.20760274, y: 0.35354066}
-      - {x: -0.2967134, y: 0.19339004}
-      - {x: -0.40646094, y: 0.00037109852}
-      - {x: -0.1979518, y: -0.3570211}
-      - {x: 0.20565462, y: -0.3547101}
-      - {x: 0.39987993, y: 0.008101225}
-      - {x: 0.20736551, y: 0.3510633}
-  m_UseDelaunayMesh: 0
---- !u!114 &5683452517959385620
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3911293155193878859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2c6dfcc4ef5934b8e61dfee6328eee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MovementSpeed: 0.7
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!1 &5894950036649422914
 GameObject:
   m_ObjectHideFlags: 0
