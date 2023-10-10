@@ -58,4 +58,14 @@ public class EnemyShip : MonoBehaviour, IDamageable
             id.Damage(1.0f);
         }
     }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.ChangeEnemiesActive(1);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.ChangeEnemiesActive(-1);
+    }
 }

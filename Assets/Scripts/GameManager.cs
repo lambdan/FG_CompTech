@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text _gameOverText;
     [SerializeField] private TMP_Text _activeEnemiesText;
 
-    private int _enemiesSpawned;
+    private int _activeEnemies;
     private int _kills;
     private bool _gameOver;
     
@@ -48,33 +48,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddEnemiesActive(int n)
+    public void ChangeEnemiesActive(int n)
     {
-        _enemiesSpawned += n;
+        _activeEnemies += n;
         UpdateActiveEnemiesText();
     }
     
     public void AddKill()
     {
         _kills += 1;
+        //
+        // if (_kills % 10 == 0)
+        // {
+        //     PlayerShip.Instance.Heal(1); // heal every 10 kills
+        // }
 
-        if (_kills % 10 == 0)
-        {
-            PlayerShip.Instance.Heal(1); // heal every 10 kills
-        }
-
-        if (_kills % 100 == 0)
-        {
-            PlayerShip.Instance.AddMaxHealth(1); // add max health every 100 kills
-        }
+        // if (_kills % 100 == 0)
+        // {
+        //     PlayerShip.Instance.AddMaxHealth(1); // add max health every 100 kills
+        // }
         
         UpdateKillsText();
-        UpdateActiveEnemiesText();
     }
 
     private void UpdateActiveEnemiesText()
     {
-        _activeEnemiesText.text = "Active Enemies: " + (_enemiesSpawned - _kills);
+        _activeEnemiesText.text = "Active Enemies: " + (_activeEnemies);
     }
 
     public void UpdateKillsText()

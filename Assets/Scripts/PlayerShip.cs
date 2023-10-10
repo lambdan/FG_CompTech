@@ -40,12 +40,7 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
         // input handling
         transform.position += transform.up * (Input.GetAxisRaw("Vertical") * Time.deltaTime * MovementSpeed);
         transform.Rotate(0, 0, Input.GetAxisRaw("Horizontal") * Time.deltaTime * RotationSpeed * -1);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _weapon.Fire();
-        }
-
+        
         // wrap around screen
         if (transform.position.x > 9)
         {
@@ -65,6 +60,14 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
             transform.position = new Vector3(transform.position.x, 5, 0);
         }
 
+    }
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            _weapon.Fire();
+        }
     }
 
     public void Damage(float dmg)
@@ -89,12 +92,7 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
             {
                 _hitInvincibility.StartInvincibility();
             }
-            
-            
             GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
-            
-            // play flashing animation
-            // etc
         }
     }
 
