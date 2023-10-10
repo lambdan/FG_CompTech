@@ -49,4 +49,3 @@ MonoBehaviour:
   SpawnRadiusRange: {x: 8, y: 12}
   EnemyPrefabs:
   - {fileID: 3911293155193878859, guid: d09299a8e9371114abc2cd45ed523bf0, type: 3}
-  - {fileID: 3911293155193878859, guid: 376eb7d7f698eef429ac1844445abdd6, type: 3}

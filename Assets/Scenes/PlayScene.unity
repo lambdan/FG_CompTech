@@ -899,7 +899,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5071134951090446445, guid: 86e926a8e109bfb4b8e33df69aedf682, type: 3}
       propertyPath: SpawnsPerFrequency
-      value: 2
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
