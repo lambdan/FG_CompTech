@@ -962,7 +962,6 @@ MonoBehaviour:
   _healthText: {fileID: 2015679816}
   _gameOverText: {fileID: 1195192938}
   _activeEnemiesText: {fileID: 932309917}
-  _fpsText: {fileID: 0}
 --- !u!4 &2134644424
 Transform:
   m_ObjectHideFlags: 0
@@ -1059,6 +1058,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 58225851442430869, guid: 8b21bd5ad74861743b87540d9a4d6a7a, type: 3}
+      propertyPath: StartHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 3911293155193878859, guid: 8b21bd5ad74861743b87540d9a4d6a7a, type: 3}
       propertyPath: m_Name
       value: PlayerShip
