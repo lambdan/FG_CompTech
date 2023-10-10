@@ -1031,7 +1031,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5071134951090446445, guid: 86e926a8e109bfb4b8e33df69aedf682, type: 3}
       propertyPath: SpawnFrequency
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071134951090446445, guid: 86e926a8e109bfb4b8e33df69aedf682, type: 3}
+      propertyPath: SpawnRadiusRange.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5071134951090446445, guid: 86e926a8e109bfb4b8e33df69aedf682, type: 3}
+      propertyPath: SpawnRadiusRange.y
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5071134951090446445, guid: 86e926a8e109bfb4b8e33df69aedf682, type: 3}
       propertyPath: SpawnsPerFrequency
