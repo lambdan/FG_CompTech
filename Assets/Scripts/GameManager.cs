@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text _killsText;
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _gameOverText;
+    [SerializeField] private TMP_Text _activeEnemiesText;
 
+    private int _enemiesSpawned;
     private int _kills;
     private bool _gameOver;
     
@@ -46,6 +48,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddEnemiesActive(int n)
+    {
+        _enemiesSpawned += n;
+        UpdateActiveEnemiesText();
+    }
+    
     public void AddKill()
     {
         _kills += 1;
@@ -61,6 +69,12 @@ public class GameManager : MonoBehaviour
         }
         
         UpdateKillsText();
+        UpdateActiveEnemiesText();
+    }
+
+    private void UpdateActiveEnemiesText()
+    {
+        _activeEnemiesText.text = "Active Enemies: " + (_enemiesSpawned - _kills);
     }
 
     public void UpdateKillsText()

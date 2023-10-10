@@ -44,6 +44,8 @@ public class EnemySpawner : MonoBehaviour
                 GameObject randomEnemy = EnemyPrefabs[Random.Range(0, EnemyPrefabs.Count)];
                 Instantiate(randomEnemy, RandomPoint(), Quaternion.identity);
             }
+
+            GameManager.Instance.AddEnemiesActive(SpawnsPerFrequency);
             
             yield return new WaitForSeconds(SpawnFrequency);
         }
