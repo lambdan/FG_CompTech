@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Entities;
 
 [RequireComponent(typeof(Health))]
-public class EnemyShip : MonoBehaviour, IDamageable
+public class EnemyShip : MonoBehaviour, IDamageable 
 {
     public float MovementSpeed = 1.5f;
     private Health _health;
@@ -16,16 +17,16 @@ public class EnemyShip : MonoBehaviour, IDamageable
         _hitInvincibility = GetComponent<HitInvincibility>();
     }
     
-    void FixedUpdate()
-    {
-        if (PlayerShip.Instance == null)
-        {
-            return;
-        }
-
-        transform.position = Vector3.MoveTowards(transform.position, PlayerShip.Instance.transform.position, MovementSpeed * Time.fixedDeltaTime);
-
-    }
+    // void FixedUpdate()
+    // {
+    //     if (PlayerShip.Instance == null)
+    //     {
+    //         return;
+    //     }
+    //
+    //     transform.position = Vector3.MoveTowards(transform.position, PlayerShip.Instance.transform.position, MovementSpeed * Time.fixedDeltaTime);
+    //
+    // }
 
     public void Damage(float dmg)
     {

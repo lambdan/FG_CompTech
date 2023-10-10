@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Collections;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +19,7 @@ public class GameManager : MonoBehaviour
     private int _activeEnemies;
     private int _kills;
     private bool _gameOver;
+    private World _world;
 
     
     void Awake()
@@ -30,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        _world = World.DefaultGameObjectInjectionWorld;
         _kills = 0;
         _gameOver = false;
         UpdateKillsText();
@@ -73,7 +78,8 @@ public class GameManager : MonoBehaviour
 
     private void UpdateActiveEnemiesText()
     {
-        _activeEnemiesText.text = "Active Enemies: " + (_activeEnemies);
+        var q = new EntityQueryBuilder(Allocator.Temp).WithAll<EnemyMoveSpeed>().Build(_world.EntityManager).CalculateEntityCount();
+        _activeEnemiesText.text = "Active Enemies: " + q;
     }
 
     public void UpdateKillsText()
@@ -103,4 +109,8 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(10, 10, 100, 20), (1 / Time.smoothDeltaTime).ToString("f0"));
     }
 
+    private void FixedUpdate()
+    {
+        UpdateActiveEnemiesText();
+    }
 }

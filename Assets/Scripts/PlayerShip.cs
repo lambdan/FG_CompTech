@@ -1,8 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+
+[Serializable]
+public struct PlayerTag : IComponentData
+{
+}
+
 
 [RequireComponent(typeof(Health))]
 public class PlayerShip : MonoBehaviour, IDamageable, IHealable
@@ -12,6 +22,8 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
 
     private Weapon _weapon;
     private Health _health;
+    private World _world;
+    private Entity _playerPosEntity;
     private HitInvincibility _hitInvincibility;
 
     public static PlayerShip Instance;
@@ -32,6 +44,10 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
 
     void Start()
     {
+        // get reference to playerpos entity data
+        _world = World.DefaultGameObjectInjectionWorld;
+        _playerPosEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<PlayerPosition>().Build(_world.EntityManager).GetSingletonEntity();
+        
         GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
     }
     
@@ -60,10 +76,15 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
             transform.position = new Vector3(transform.position.x, 5, 0);
         }
 
+        
+
     }
 
     private void FixedUpdate()
     {
+        // tell enemy entities where we are
+        _world.EntityManager.SetComponentData(_playerPosEntity, new PlayerPosition() { PlayerPos = transform.position});
+        
         if (Input.GetKey(KeyCode.Space))
         {
             _weapon.Fire();
