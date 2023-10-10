@@ -962,6 +962,7 @@ MonoBehaviour:
   _healthText: {fileID: 2015679816}
   _gameOverText: {fileID: 1195192938}
   _activeEnemiesText: {fileID: 932309917}
+  _fpsText: {fileID: 0}
 --- !u!4 &2134644424
 Transform:
   m_ObjectHideFlags: 0

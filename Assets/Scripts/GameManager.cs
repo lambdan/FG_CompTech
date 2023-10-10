@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private int _activeEnemies;
     private int _kills;
     private bool _gameOver;
-    
+
     
     void Awake()
     {
@@ -97,4 +97,10 @@ public class GameManager : MonoBehaviour
     {
         return _gameOver;
     }
+
+    void OnGUI()
+    {
+        GUI.Label(new Rect(10, 10, 100, 20), (1 / Time.smoothDeltaTime).ToString("f0"));
+    }
+
 }
