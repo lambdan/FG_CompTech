@@ -31,19 +31,25 @@ public partial struct BulletDamageSystem : ISystem
         {
             foreach (var (enemyTransform, enemyEntity) in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Enemy>().WithEntityAccess())
             {
-
-                var distance = math.distance(bulletTransform.ValueRO.Position, enemyTransform.ValueRO.Position);
-                if (distance < 0.5f)
+                var bulletPos = bulletTransform.ValueRO.Position;
+                var enemyPos = enemyTransform.ValueRO.Position;
+                
+                if (math.abs(bulletPos.x - enemyPos.x) > 0.5f)
                 {
-                    if (config.DestroyBulletOnImpact)
-                    {
-                        ecb.DestroyEntity(bulletEntity);
-                    }
-                    
-                    ecb.DestroyEntity(enemyEntity);
-                    
-                    
+                    continue;
                 }
+
+                if (math.abs(bulletPos.y - enemyPos.y) > 0.5f)
+                {
+                    continue;
+                }
+                
+                if (config.DestroyBulletOnImpact) { 
+                    ecb.DestroyEntity(bulletEntity);
+                }
+                
+                ecb.DestroyEntity(enemyEntity);
+
             }
         }
         
