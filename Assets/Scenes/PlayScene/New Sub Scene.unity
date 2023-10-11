@@ -199,8 +199,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyPrefab: {fileID: 3911293155193878859, guid: d09299a8e9371114abc2cd45ed523bf0, type: 3}
-  radius: 8
-  frequency: 0.1
+  radius: 5
+  frequency: 0.3
   many: 100
 --- !u!4 &1092564375
 Transform:

@@ -8,6 +8,7 @@ using Random = Unity.Mathematics.Random;
 public class EnemyController : MonoBehaviour
 {
     public bool HuntPlayer = true;
+    public bool Jitter = true;
     public float Speed = 2;
     
      class Baker : Baker<EnemyController>
@@ -19,7 +20,8 @@ public class EnemyController : MonoBehaviour
             AddComponent(entity, new EnemyParams
             {
                 HuntPlayer = authoring.HuntPlayer,
-                Speed = authoring.Speed
+                Speed = authoring.Speed,
+                Jitter = authoring.Jitter
             });
 
             AddComponent(entity, new PlayerState
@@ -38,6 +40,7 @@ public struct EnemyParams : IComponentData
 {
     public bool HuntPlayer;
     public float Speed;
+    public bool Jitter;
 }
 
 public struct PlayerState : IComponentData
