@@ -11,10 +11,18 @@ public class PlayerAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-            AddComponent(entity, new Player
+            AddComponent(entity, new Player{});
+            
+            AddComponent(entity, new PlayerHealth
             {
                 Health = 100,
                 LastDamage = 0
+            });
+            
+            AddComponent(entity, new PlayerStats
+            {
+                Kills = 0,
+                BulletsFired = 0
             });
         }
     }
@@ -22,6 +30,18 @@ public class PlayerAuthoring : MonoBehaviour
 
 public struct Player : IComponentData
 {
+    public LocalTransform Transform;
+    public float3 Forward;
+}
+
+public struct PlayerHealth : IComponentData
+{
     public int Health;
     public double LastDamage;
+}
+
+public struct PlayerStats : IComponentData
+{
+    public int Kills;
+    public int BulletsFired;
 }

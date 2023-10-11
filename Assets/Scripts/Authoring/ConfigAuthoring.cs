@@ -11,6 +11,8 @@ public class ConfigAuthoring : MonoBehaviour
     [Header("Player Params")]
     public float PlayerSpeed = 1;
     public float PlayerRotationSpeed = 2;
+    public float BulletSpeed = 10;
+    public bool DestroyBulletOnImpact = false;
 
     [Header("Enemy Spawning")]
     public int EnemySpawnAmount = 10;
@@ -38,7 +40,9 @@ public class ConfigAuthoring : MonoBehaviour
                 EnemySpawnFrequency = authoring.EnemySpawnFrequency,
                 EnemySpawnRadius = authoring.EnemySpawnRadius,
                 EnemySpeed = authoring.EnemySpeed,
-                EnemyJitter = authoring.EnemyJitter
+                EnemyJitter = authoring.EnemyJitter,
+                BulletSpeed = authoring.BulletSpeed,
+                DestroyBulletOnImpact = authoring.DestroyBulletOnImpact
                 
             });
         }
@@ -57,5 +61,7 @@ public struct Config : IComponentData
     public float EnemySpawnRadius;
     public float EnemySpeed;
     public bool EnemyJitter;
+    public float BulletSpeed;
+    public bool DestroyBulletOnImpact;
 
 }

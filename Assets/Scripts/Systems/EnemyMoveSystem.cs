@@ -9,7 +9,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
-[BurstCompile]
+
+[UpdateBefore(typeof(TransformSystemGroup))]
 public partial struct EnemyMoveSystem : ISystem
 {
     private uint randomCounter;
@@ -17,12 +18,14 @@ public partial struct EnemyMoveSystem : ISystem
 
     private EntityCommandBuffer ecb;
 
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<Player>();
         state.RequireForUpdate<Enemy>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();
@@ -53,8 +56,9 @@ public partial struct EnemyMoveSystem : ISystem
             if (distanceToPlayer < 0.1f)
             {
                 // decrement player HP
+                
                 // TODO there must be a better way !!!
-                foreach(var h in SystemAPI.Query<RefRW<Player>>().WithAll<Player>())
+                foreach(var h in SystemAPI.Query<RefRW<PlayerHealth>>().WithAll<Player>())
                 {
                     if (h.ValueRO.LastDamage + 1 < SystemAPI.Time.ElapsedTime) // TODO feels cursed to do player damage cooldown here
                     {
@@ -63,7 +67,7 @@ public partial struct EnemyMoveSystem : ISystem
                     }
                 }
                 
-                ecb.DestroyEntity(entity); // queue ourselves to be destroyed
+                // ecb.DestroyEntity(entity); // queue ourselves to be destroyed
 
             }
 

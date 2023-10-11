@@ -15,12 +15,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _gameOverText;
     [SerializeField] private TMP_Text _activeEnemiesText;
+    [SerializeField] private TMP_Text _bulletsActiveText;
 
     private int _activeEnemies;
     private int _kills;
     private bool _gameOver;
-    private int _activeEnemiesCount;
-    
+
     private World _world;
     private EntityManager _entityManager;
 
@@ -66,8 +66,14 @@ public class GameManager : MonoBehaviour
 
     private void UpdateActiveEnemiesText()
     {
-        _activeEnemiesCount = _entityManager.CreateEntityQuery(typeof(Enemy)).CalculateEntityCount();
-        _activeEnemiesText.text = "Active Enemies: " + _activeEnemiesCount;
+        int q = _entityManager.CreateEntityQuery(typeof(Enemy)).CalculateEntityCount();
+        _activeEnemiesText.text = "Active Enemies: " + q;
+    }
+    
+    private void UpdateActiveBulletsText()
+    {
+        var q = _entityManager.CreateEntityQuery(typeof(Bullet)).CalculateEntityCount();
+        _bulletsActiveText.text = "Bullets Active: " + q;
     }
 
     public void UpdateKillsText()
@@ -78,8 +84,8 @@ public class GameManager : MonoBehaviour
     public void UpdateHealthText()
     {
         // TODO cache stuff
-        EntityQuery q = _entityManager.CreateEntityQuery(typeof(Player));
-        if (q.TryGetSingleton<Player>(out Player p))
+        EntityQuery q = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
+        if (q.TryGetSingleton<PlayerHealth>(out PlayerHealth p))
         {
             _healthText.text = "Health: " + p.Health;
 
@@ -100,13 +106,14 @@ public class GameManager : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 100, 20), "FPS: " + (1 / Time.smoothDeltaTime).ToString("f0"));
+        GUI.Label(new Rect(10, 10, 200, 50), "FPS: " + (1 / Time.smoothDeltaTime).ToString("f0"));
     }
 
     private void FixedUpdate()
     {
         UpdateActiveEnemiesText();
         UpdateHealthText();
+        UpdateActiveBulletsText();
     }
 
     public void CleanAndRestartECS()

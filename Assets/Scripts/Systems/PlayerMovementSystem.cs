@@ -27,7 +27,7 @@ public partial struct PlayerMovementSystem : ISystem
             return; // no input == nothing to do
         }
 
-        foreach (var transform in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<Player>())
+        foreach (var (transform,p) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<Player>>().WithAll<Player>())
         {
             
             // https://stackoverflow.com/a/56622582
@@ -42,8 +42,11 @@ public partial struct PlayerMovementSystem : ISystem
 
             // movement
             var forward = math.mul(rot.value, new float3(0, 1, 0));
+            p.ValueRW.Forward = forward;
             var newPos = transform.ValueRO.Position + vertical * forward * SystemAPI.Time.DeltaTime * config.PlayerSpeed;
             transform.ValueRW.Position = newPos;
+
+            p.ValueRW.Transform = transform.ValueRO;
         }
 
     }
