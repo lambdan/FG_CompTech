@@ -158,6 +158,7 @@ MonoBehaviour:
   PlayerSpeed: 5
   PlayerRotationSpeed: 5
   BulletSpeed: 10
+  DestroyBulletOnImpact: 0
   EnemySpawnAmount: 100
   EnemySpawnFrequency: 0.1
   EnemySpawnRadius: 5
