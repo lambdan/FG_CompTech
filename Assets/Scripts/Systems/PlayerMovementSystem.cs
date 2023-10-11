@@ -44,6 +44,17 @@ public partial struct PlayerMovementSystem : ISystem
             var forward = math.mul(rot.value, new float3(0, 1, 0));
             p.ValueRW.Forward = forward;
             var newPos = transform.ValueRO.Position + vertical * forward * SystemAPI.Time.DeltaTime * config.PlayerSpeed;
+
+            if (math.abs(newPos.x) > 9)
+            {
+                newPos.x *= -1;
+            }
+
+            if (math.abs(newPos.y) > 5)
+            {
+                newPos.y *= -1;
+            }
+            
             transform.ValueRW.Position = newPos;
 
             p.ValueRW.Transform = transform.ValueRO;
