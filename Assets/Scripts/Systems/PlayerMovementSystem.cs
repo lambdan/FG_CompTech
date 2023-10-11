@@ -32,6 +32,7 @@ public partial struct PlayerMovementSystem : ISystem
             
             // https://stackoverflow.com/a/56622582
             
+            // rotation
             var rot = transform.ValueRO.Rotation;
             if (horizontal != 0)
             {
@@ -39,11 +40,9 @@ public partial struct PlayerMovementSystem : ISystem
                 transform.ValueRW.Rotation = a;
             }
 
+            // movement
             var forward = math.mul(rot.value, new float3(0, 1, 0));
             var newPos = transform.ValueRO.Position + vertical * forward * SystemAPI.Time.DeltaTime * config.PlayerSpeed;
-
-            // check if we collide with anything here using newPos
-
             transform.ValueRW.Position = newPos;
         }
 

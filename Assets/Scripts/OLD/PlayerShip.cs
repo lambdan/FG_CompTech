@@ -45,7 +45,7 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
         _world = World.DefaultGameObjectInjectionWorld;
         _entityManager = _world.EntityManager;
         
-        GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+        // GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
     }
     
     void Update()
@@ -139,7 +139,7 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
             {
                 _hitInvincibility.StartInvincibility();
             }
-            GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+            // GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
         }
     }
 
@@ -147,13 +147,13 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
     public void Heal(float amount)
     {
         _health.AddHealth(amount);
-        GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+        // GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
     }
 
     public void AddMaxHealth(float amount)
     {
         _health.AddMaxHealth(amount);
         _health.AddHealth(999);
-        GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
+        // GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
     }
 }

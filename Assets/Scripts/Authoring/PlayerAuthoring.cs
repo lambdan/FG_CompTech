@@ -13,6 +13,8 @@ public class PlayerAuthoring : MonoBehaviour
 
             AddComponent(entity, new Player
             {
+                Health = 100,
+                LastDamage = 0
             });
         }
     }
@@ -20,6 +22,6 @@ public class PlayerAuthoring : MonoBehaviour
 
 public struct Player : IComponentData
 {
-    // public float3 Position;
-    // public LocalTransform Transform;
+    public int Health;
+    public double LastDamage;
 }

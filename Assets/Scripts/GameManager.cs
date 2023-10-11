@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     private World _world;
     private EntityManager _entityManager;
 
-    
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -75,9 +75,15 @@ public class GameManager : MonoBehaviour
         _killsText.text = "Kills: " + _kills;
     }
 
-    public void UpdateHealthText(float currentHealth, float maxHealth)
+    public void UpdateHealthText()
     {
-        _healthText.text = "Health: " + currentHealth + "/" + maxHealth;
+        // TODO cache stuff
+        EntityQuery q = _entityManager.CreateEntityQuery(typeof(Player));
+        if (q.TryGetSingleton<Player>(out Player p))
+        {
+            _healthText.text = "Health: " + p.Health;
+
+        }
     }
     
     public void GameOver()
@@ -100,6 +106,7 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateActiveEnemiesText();
+        UpdateHealthText();
     }
 
     public void CleanAndRestartECS()
