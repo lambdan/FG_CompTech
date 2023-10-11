@@ -28,11 +28,15 @@ public partial struct EnemyMoveSystem : ISystem
                      .WithEntityAccess())
 
         {
+            dir = float3.zero;
+            
+            // follow player
             if (SystemAPI.GetSingleton<EnemyParams>().HuntPlayer && SystemAPI.GetSingleton<PlayerState>().PlayerAlive)
             {
-                dir = math.normalizesafe(SystemAPI.GetSingleton<PlayerState>().PlayerPos - transform.ValueRO.Position);
+                dir += math.normalizesafe(SystemAPI.GetSingleton<PlayerState>().PlayerPos - transform.ValueRO.Position);
             }
 
+            // jitter
             if (SystemAPI.GetSingleton<EnemyParams>().Jitter)
             {
                 dir += Random.CreateFromIndex(++randomCounter).NextFloat(-1f, 1f) * new float3(1, 1, 0);
