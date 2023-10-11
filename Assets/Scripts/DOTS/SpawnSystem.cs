@@ -4,42 +4,45 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+[BurstCompile]
 public partial struct SpawnSystem : ISystem
 {
-    uint updateCounter;
-    private float lastSpawn;
-
-    [BurstCompile]
+    private uint _updateCounter;
+    private double _lastSpawn;
+    private const float TWO_PI = math.PI * 2.0f; // i cant remember what its called lol
+    
     public void OnCreate(ref SystemState state)
     {
-        // This call makes the system not update unless at least one entity in the world exists that has the Spawner component.
-        
         // TODO Change to look for player instead
         state.RequireForUpdate<SpawnerEntity>();
+        state.RequireForUpdate<PlayerState>();
     }
-
-    [BurstCompile]
+    
     public void OnUpdate(ref SystemState state)
     {
-        var freq = SystemAPI.GetSingleton<SpawnerEntity>().frequency;
-        
-        if (SystemAPI.Time.ElapsedTime > (lastSpawn + freq))
-        {
-            var enemyEnt = SystemAPI.GetSingleton<SpawnerEntity>().enemyEntity;
-            
-            var amount = SystemAPI.GetSingleton<SpawnerEntity>().amount;
-            
-            var random = Random.CreateFromIndex(updateCounter++);
+        if (SystemAPI.Time.ElapsedTime > (_lastSpawn + SystemAPI.GetSingleton<SpawnerEntity>().frequency))
+        { 
+            var random = Random.CreateFromIndex(_updateCounter++);
+            var radius = SystemAPI.GetSingleton<SpawnerEntity>().radius;
+            var angle = TWO_PI / SystemAPI.GetSingleton<SpawnerEntity>().amount;
+            var playerPos = SystemAPI.GetSingleton<PlayerState>().PlayerPos;
 
-            for (int i=0; i < amount; i++)
+            for (int i=0; i < SystemAPI.GetSingleton<SpawnerEntity>().amount; i++)
             {
-                Entity entity = state.EntityManager.Instantiate(enemyEnt);
+                Entity entity = state.EntityManager.Instantiate(SystemAPI.GetSingleton<SpawnerEntity>().enemyEntity);
                 var transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
-                float2 position = (random.NextFloat2() - new float2(0.5f, 0.5f)) * 30;
-                transform.ValueRW.Position = new float3(position.x, position.y, 0);
+
+                // set random spawn pos in a circle
+                float randomAngle = angle * i;
+                float x = radius * math.cos(randomAngle) + playerPos.x;
+                float y = radius * math.sin(randomAngle) + playerPos.y;
+                transform.ValueRW.Position = new float3(x, y, 0);
+                
             }
 
-            lastSpawn = (float)SystemAPI.Time.ElapsedTime;
+            _lastSpawn = SystemAPI.Time.ElapsedTime;
         }
     }
+    
+
 }

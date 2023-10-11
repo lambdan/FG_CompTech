@@ -1,13 +1,14 @@
-using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
-// An authoring component is just a normal MonoBehavior that has a Baker<T> class.
 public class SpawnerAuthoring : MonoBehaviour
 {
-    public GameObject Prefab;
-    public float frequency = 0.5f;
-    public int many = 10;
+    public GameObject EnemyPrefab;
+    public float radius = 10;
+    public float frequency = 0.1f;
+    public int many = 100;
+    
     
     class Baker : Baker<SpawnerAuthoring>
     {
@@ -17,13 +18,12 @@ public class SpawnerAuthoring : MonoBehaviour
             
             AddComponent(entity, new SpawnerEntity
             {
-                enemyEntity = GetEntity(authoring.Prefab, TransformUsageFlags.Dynamic),
+                enemyEntity = GetEntity(authoring.EnemyPrefab, TransformUsageFlags.Dynamic),
                 frequency = authoring.frequency,
-                amount = authoring.many
+                amount = authoring.many,
+                radius = authoring.radius
             });
         }
-
-
     }
 }
 
@@ -32,5 +32,6 @@ struct SpawnerEntity : IComponentData
     public Entity enemyEntity;
     public float frequency;
     public int amount;
+    public float radius;
 }
 

@@ -1,18 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
-
-[Serializable]
-public struct PlayerTag : IComponentData
-{
-}
-
 
 [RequireComponent(typeof(Health))]
 public class PlayerShip : MonoBehaviour, IDamageable, IHealable
@@ -22,9 +12,14 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
 
     private Weapon _weapon;
     private Health _health;
-    private World _world;
-    private Entity _playerPosEntity;
     private HitInvincibility _hitInvincibility;
+    
+    private World _world;
+    private EntityManager _entityManager;
+    private Entity _playerPosEntity;
+    private bool _gotEntity = false;
+    
+    
 
     public static PlayerShip Instance;
     
@@ -44,9 +39,11 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
 
     void Start()
     {
+        _gotEntity = false;
+        
         // get reference to playerpos entity data
         _world = World.DefaultGameObjectInjectionWorld;
-        _playerPosEntity = new EntityQueryBuilder(Allocator.Temp).WithAll<PlayerPosition>().Build(_world.EntityManager).GetSingletonEntity();
+        _entityManager = _world.EntityManager;
         
         GameManager.Instance.UpdateHealthText(_health.GetCurrentHealth(), _health.GetMaxHealth());
     }
@@ -76,14 +73,43 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
             transform.position = new Vector3(transform.position.x, 5, 0);
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Damage(999);
+        }
 
     }
 
     private void FixedUpdate()
     {
-        // tell enemy entities where we are
-        _world.EntityManager.SetComponentData(_playerPosEntity, new PlayerPosition() { PlayerPos = transform.position});
+        // to tell enemy entities where we are
+        // https://docs.unity.cn/Packages/com.unity.entities@0.50/api/Unity.Entities.EntityQuery.SetSingleton.html
+
+        if (!_gotEntity)
+        {
+            EntityQuery eq = _entityManager.CreateEntityQuery(new ComponentType[] { typeof(PlayerState) });
+
+            if (eq.TryGetSingletonEntity<PlayerState>(out Entity eee))
+            {
+                _playerPosEntity = eee;
+                _gotEntity = true;
+            }
+            else
+            {
+                Debug.Log("failed to get entity");
+            }
+        }
+        else
+        {
+            // update player pos in entity
+            _entityManager.SetComponentData(_playerPosEntity, new PlayerState()
+                {
+                    PlayerAlive =  _health.IsAlive(), 
+                    PlayerPos = transform.position
+                }
+            );
+        }
+        
         
         if (Input.GetKey(KeyCode.Space))
         {

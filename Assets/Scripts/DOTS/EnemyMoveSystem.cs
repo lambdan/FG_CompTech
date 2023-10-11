@@ -7,29 +7,36 @@ using Unity.Transforms;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[BurstCompile]
 public partial struct EnemyMoveSystem : ISystem
 {
-    [BurstCompile]
+    private float3 dir;
+
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<EnemyData>();
+        state.RequireForUpdate<PlayerState>();
+        state.RequireForUpdate<EnemyTag>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-
-
-        foreach (var (transform, entity) in
+        foreach (var (transform, entity) in // get all entities with the EnemyTag
                  SystemAPI.Query<RefRW<LocalTransform>>()
-                     .WithAll<EnemyMoveSpeed>()
+                     .WithAll<EnemyTag>()
                      .WithEntityAccess())
+
         {
+            if (SystemAPI.GetSingleton<EnemyParams>().HuntPlayer && SystemAPI.GetSingleton<PlayerState>().PlayerAlive)
+            {
+                dir = math.normalizesafe(SystemAPI.GetSingleton<PlayerState>().PlayerPos - transform.ValueRO.Position);
+            }
             
-            float3 dir = (SystemAPI.GetSingleton<PlayerPosition>().PlayerPos - transform.ValueRO.Position);
-            dir = math.normalize(dir);
-            transform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * SystemAPI.GetSingleton<EnemyData>().Speed;
+            transform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * SystemAPI.GetSingleton<EnemyParams>().Speed;  
 
         }
     }
+
+
+
+
 }

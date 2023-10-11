@@ -19,7 +19,10 @@ public class GameManager : MonoBehaviour
     private int _activeEnemies;
     private int _kills;
     private bool _gameOver;
+    private int _activeEnemiesCount;
+    
     private World _world;
+    private EntityManager _entityManager;
 
     
     void Awake()
@@ -35,6 +38,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _world = World.DefaultGameObjectInjectionWorld;
+        _entityManager = _world.EntityManager;
+        
         _kills = 0;
         _gameOver = false;
         UpdateKillsText();
@@ -44,7 +49,7 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R)) // restart
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            CleanAndRestartECS();
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -52,34 +57,17 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
     }
-
-    public void ChangeEnemiesActive(int n)
-    {
-        _activeEnemies += n;
-        UpdateActiveEnemiesText();
-    }
     
     public void AddKill()
     {
         _kills += 1;
-        //
-        // if (_kills % 10 == 0)
-        // {
-        //     PlayerShip.Instance.Heal(1); // heal every 10 kills
-        // }
-
-        // if (_kills % 100 == 0)
-        // {
-        //     PlayerShip.Instance.AddMaxHealth(1); // add max health every 100 kills
-        // }
-        
         UpdateKillsText();
     }
 
     private void UpdateActiveEnemiesText()
     {
-        var q = new EntityQueryBuilder(Allocator.Temp).WithAll<EnemyMoveSpeed>().Build(_world.EntityManager).CalculateEntityCount();
-        _activeEnemiesText.text = "Active Enemies: " + q;
+        _activeEnemiesCount = _entityManager.CreateEntityQuery(typeof(EnemyTag)).CalculateEntityCount();
+        _activeEnemiesText.text = "Active Enemies: " + _activeEnemiesCount;
     }
 
     public void UpdateKillsText()
@@ -112,5 +100,25 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateActiveEnemiesText();
+    }
+
+    public void CleanAndRestartECS()
+    {
+        // https://forum.unity.com/threads/reset-ecs-world-and-jobs-to-start-fresh-again.1364208/#post-8609088
+        _entityManager.CompleteAllTrackedJobs();
+        foreach (var system in _world.Systems)
+        {
+            system.Enabled = false;
+        }
+
+        _world.Dispose();
+        DefaultWorldInitialization.Initialize("Default World", false);
+        if (!ScriptBehaviourUpdateOrder.IsWorldInCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld))
+        {
+            ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
+        }
+
+        // SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
