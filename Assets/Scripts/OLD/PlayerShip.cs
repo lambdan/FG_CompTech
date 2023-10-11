@@ -85,30 +85,30 @@ public class PlayerShip : MonoBehaviour, IDamageable, IHealable
         // to tell enemy entities where we are
         // https://docs.unity.cn/Packages/com.unity.entities@0.50/api/Unity.Entities.EntityQuery.SetSingleton.html
 
-        if (!_gotEntity)
-        {
-            EntityQuery eq = _entityManager.CreateEntityQuery(new ComponentType[] { typeof(PlayerState) });
-
-            if (eq.TryGetSingletonEntity<PlayerState>(out Entity eee))
-            {
-                _playerPosEntity = eee;
-                _gotEntity = true;
-            }
-            else
-            {
-                Debug.Log("failed to get entity");
-            }
-        }
-        else
-        {
-            // update player pos in entity
-            _entityManager.SetComponentData(_playerPosEntity, new PlayerState()
-                {
-                    PlayerAlive =  _health.IsAlive(), 
-                    PlayerPos = transform.position
-                }
-            );
-        }
+        // if (!_gotEntity)
+        // {
+        //     EntityQuery eq = _entityManager.CreateEntityQuery(new ComponentType[] { typeof(PlayerState) });
+        //
+        //     if (eq.TryGetSingletonEntity<PlayerState>(out Entity eee))
+        //     {
+        //         _playerPosEntity = eee;
+        //         _gotEntity = true;
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("failed to get entity");
+        //     }
+        // }
+        // else
+        // {
+        //     // update player pos in entity
+        //     _entityManager.SetComponentData(_playerPosEntity, new PlayerState()
+        //         {
+        //             PlayerAlive =  _health.IsAlive(), 
+        //             PlayerPos = transform.position
+        //         }
+        //     );
+        // }
         
         
         if (Input.GetKey(KeyCode.Space))

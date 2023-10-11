@@ -1,4 +1,6 @@
 using Unity.Entities;
+using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 public class PlayerAuthoring : MonoBehaviour
@@ -9,11 +11,15 @@ public class PlayerAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-            AddComponent<Player>(entity);
+            AddComponent(entity, new Player
+            {
+            });
         }
     }
 }
 
 public struct Player : IComponentData
 {
+    // public float3 Position;
+    // public LocalTransform Transform;
 }

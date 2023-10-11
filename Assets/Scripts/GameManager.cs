@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateActiveEnemiesText()
     {
-        _activeEnemiesCount = _entityManager.CreateEntityQuery(typeof(EnemyTag)).CalculateEntityCount();
+        _activeEnemiesCount = _entityManager.CreateEntityQuery(typeof(Enemy)).CalculateEntityCount();
         _activeEnemiesText.text = "Active Enemies: " + _activeEnemiesCount;
     }
 
@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(10, 10, 100, 20), (1 / Time.smoothDeltaTime).ToString("f0"));
+        GUI.Label(new Rect(10, 10, 100, 20), "FPS: " + (1 / Time.smoothDeltaTime).ToString("f0"));
     }
 
     private void FixedUpdate()

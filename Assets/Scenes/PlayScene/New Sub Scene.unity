@@ -153,8 +153,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPrefab: {fileID: 3911293155193878859, guid: 8b21bd5ad74861743b87540d9a4d6a7a, type: 3}
-  EnemyPrefab: {fileID: 0}
+  EnemyPrefab: {fileID: 3911293155193878859, guid: 411c186780c8c134e922b60391a84364, type: 3}
   BulletPrefab: {fileID: 0}
+  PlayerSpeed: 5
+  PlayerRotationSpeed: 5
+  EnemySpawnAmount: 10
+  EnemySpawnFrequency: 1
+  EnemySpawnRadius: 5
+  EnemySpeed: 1.5
+  EnemyJitter: 0
 --- !u!4 &910530261
 Transform:
   m_ObjectHideFlags: 0
