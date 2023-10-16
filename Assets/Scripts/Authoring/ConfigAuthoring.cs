@@ -12,6 +12,7 @@ public class ConfigAuthoring : MonoBehaviour
     [Header("Player Params")]
     public float PlayerSpeed = 1;
     public float PlayerRotationSpeed = 2;
+    public float PlayerHitInvincibilitySeconds = 1.0f;
     
     [Header("Player Bullets")]
     public float BulletSpeed = 10;
@@ -49,7 +50,8 @@ public class ConfigAuthoring : MonoBehaviour
                 BulletSpeed = authoring.BulletSpeed,
                 DestroyBulletOnImpact = authoring.DestroyBulletOnImpact,
                 BulletSpawnForwardOffset = authoring.BulletSpawnForwardOffset,
-                FireCooldown = authoring.FireCooldown
+                FireCooldown = authoring.FireCooldown,
+                PlayerHitInvincibilitySeconds = authoring.PlayerHitInvincibilitySeconds
             });
         }
     }
@@ -71,5 +73,6 @@ public struct Config : IComponentData
     public bool DestroyBulletOnImpact;
     public float3 BulletSpawnForwardOffset;
     public float FireCooldown;
+    public float PlayerHitInvincibilitySeconds;
 
 }

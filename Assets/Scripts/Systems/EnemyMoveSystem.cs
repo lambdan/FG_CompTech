@@ -35,18 +35,6 @@ public partial struct EnemyMoveSystem : ISystem
             }
 
             enemyTransform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * config.EnemySpeed;
-
-            var distanceToPlayer = math.distance(playerPos, enemyTransform.ValueRO.Position);
-            if (distanceToPlayer < 0.1f)
-            {
-                // decrement player HP
-                var ph = SystemAPI.GetSingletonRW<PlayerHealth>();
-                if (ph.ValueRO.LastDamage + 1 < SystemAPI.Time.ElapsedTime) // TODO feels cursed to do player damage cooldown here
-                {
-                    ph.ValueRW.Health -= 1;
-                    ph.ValueRW.LastDamage = SystemAPI.Time.ElapsedTime;
-                }
-            }
         }
     }
 
