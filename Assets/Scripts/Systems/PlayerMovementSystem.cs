@@ -16,8 +16,6 @@ public partial struct PlayerMovementSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var config = SystemAPI.GetSingleton<Config>();
-     
         var horizontal = Input.GetAxisRaw("Horizontal");
         var vertical = Input.GetAxisRaw("Vertical");
 
@@ -25,8 +23,11 @@ public partial struct PlayerMovementSystem : ISystem
         {
             return; // no input == nothing to do
         }
+        
+        var config = SystemAPI.GetSingleton<Config>();
 
-        foreach (var (transform,p) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<Player>>().WithAll<Player>())
+        // TODO surely there must be a way to get a single query
+        foreach (var (transform,playerTag) in SystemAPI.Query<RefRW<LocalTransform>,RefRW<Player>>().WithAll<Player>())
         {
             
             // https://stackoverflow.com/a/56622582
@@ -35,15 +36,16 @@ public partial struct PlayerMovementSystem : ISystem
             var rot = transform.ValueRO.Rotation;
             if (horizontal != 0)
             {
-                var a = math.mul(rot.value, quaternion.RotateZ(config.PlayerRotationSpeed * SystemAPI.Time.DeltaTime * horizontal * -1));
-                transform.ValueRW.Rotation = a;
+                var newRot = math.mul(rot.value, quaternion.RotateZ(config.PlayerRotationSpeed * SystemAPI.Time.DeltaTime * horizontal * -1));
+                transform.ValueRW.Rotation = newRot;
             }
 
             // movement
-            var forward = math.mul(rot.value, new float3(0, 1, 0));
-            p.ValueRW.Forward = forward;
-            var newPos = transform.ValueRO.Position + vertical * forward * SystemAPI.Time.DeltaTime * config.PlayerSpeed;
+            var newForward = math.mul(rot.value, new float3(0, 1, 0));
+            playerTag.ValueRW.Forward = newForward;
+            var newPos = transform.ValueRO.Position + vertical * newForward * SystemAPI.Time.DeltaTime * config.PlayerSpeed;
 
+            // wrap around screen (like pac-man)
             if (math.abs(newPos.x) > 9)
             {
                 newPos.x *= -1;
@@ -54,9 +56,8 @@ public partial struct PlayerMovementSystem : ISystem
                 newPos.y *= -1;
             }
             
-            transform.ValueRW.Position = newPos;
-
-            p.ValueRW.Transform = transform.ValueRO;
+            transform.ValueRW.Position = newPos; // actually makes our character move
+            playerTag.ValueRW.Transform = transform.ValueRO; // enemies read from this (they can just use the singleton)
         }
 
     }
