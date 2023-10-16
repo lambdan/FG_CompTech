@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ConfigAuthoring : MonoBehaviour
@@ -11,8 +12,12 @@ public class ConfigAuthoring : MonoBehaviour
     [Header("Player Params")]
     public float PlayerSpeed = 1;
     public float PlayerRotationSpeed = 2;
+    
+    [Header("Player Bullets")]
     public float BulletSpeed = 10;
     public bool DestroyBulletOnImpact = false;
+    public float BulletSpawnForwardOffset = 0.2f;
+    public float FireCooldown = 0.02f;
 
     [Header("Enemy Spawning")]
     public int EnemySpawnAmount = 10;
@@ -42,8 +47,9 @@ public class ConfigAuthoring : MonoBehaviour
                 EnemySpeed = authoring.EnemySpeed,
                 EnemyJitter = authoring.EnemyJitter,
                 BulletSpeed = authoring.BulletSpeed,
-                DestroyBulletOnImpact = authoring.DestroyBulletOnImpact
-                
+                DestroyBulletOnImpact = authoring.DestroyBulletOnImpact,
+                BulletSpawnForwardOffset = authoring.BulletSpawnForwardOffset,
+                FireCooldown = authoring.FireCooldown
             });
         }
     }
@@ -63,5 +69,7 @@ public struct Config : IComponentData
     public bool EnemyJitter;
     public float BulletSpeed;
     public bool DestroyBulletOnImpact;
+    public float3 BulletSpawnForwardOffset;
+    public float FireCooldown;
 
 }

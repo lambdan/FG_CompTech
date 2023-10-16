@@ -34,12 +34,7 @@ public partial struct BulletDamageSystem : ISystem
                 var bulletPos = bulletTransform.ValueRO.Position;
                 var enemyPos = enemyTransform.ValueRO.Position;
                 
-                if (math.abs(bulletPos.x - enemyPos.x) > 0.5f)
-                {
-                    continue;
-                }
-
-                if (math.abs(bulletPos.y - enemyPos.y) > 0.5f)
+                if (math.abs(bulletPos.x - enemyPos.x) > 0.1f || math.abs(bulletPos.y - enemyPos.y) > 0.1f)
                 {
                     continue;
                 }

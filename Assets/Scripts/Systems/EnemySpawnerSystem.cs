@@ -27,12 +27,12 @@ public partial struct EnemySpawnerSystem : ISystem
             for (int i = 0; i < config.EnemySpawnAmount; i++)
             {
                 Entity e = state.EntityManager.Instantiate(config.EnemyPrefab);
-                var transform = SystemAPI.GetComponentRW<LocalTransform>(e);
 
                 float angle = angleSpacing * i;
                 float x = config.EnemySpawnRadius * math.cos(angle);
                 float y = config.EnemySpawnRadius * math.sin(angle);
-                transform.ValueRW.Position = new float3(x, y, 0);
+
+                SystemAPI.GetComponentRW<LocalTransform>(e).ValueRW.Position = new float3(x, y, 0);
             }
 
             _lastSpawn = SystemAPI.Time.ElapsedTime;
