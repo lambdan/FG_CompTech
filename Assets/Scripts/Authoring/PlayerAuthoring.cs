@@ -13,7 +13,7 @@ public class PlayerAuthoring : MonoBehaviour
 
             AddComponent(entity, new Player
             {
-                entity = entity
+                Entity = entity
             });
             
             AddComponent(entity, new PlayerHealth
@@ -33,9 +33,7 @@ public class PlayerAuthoring : MonoBehaviour
 
 public struct Player : IComponentData
 {
-    public Entity entity;
-    public LocalTransform Transform;
-    public float3 Forward;
+    public Entity Entity;
 }
 
 public struct PlayerHealth : IComponentData

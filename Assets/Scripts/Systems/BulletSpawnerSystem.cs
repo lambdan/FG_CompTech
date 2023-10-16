@@ -35,21 +35,22 @@ public partial struct BulletSpawnerSystem : ISystem
         
         _lastFire = SystemAPI.Time.ElapsedTime;
 
-        var player = SystemAPI.GetSingleton<Player>();
+        var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(SystemAPI.GetSingleton<Player>().Entity).ValueRO;
         
         var bullet = state.EntityManager.Instantiate(config.BulletPrefab);
         
+        
         state.EntityManager.SetComponentData(bullet, new LocalTransform
         {
-            Position = player.Transform.Position + (player.Forward * config.BulletSpawnForwardOffset),
-            Rotation = player.Transform.Rotation,
+            Position = playerTransform.Position + (playerTransform.Forward() * config.BulletSpawnForwardOffset),
+            Rotation = playerTransform.Rotation,
             Scale = 0.1f
         });
         
         state.EntityManager.SetComponentData(bullet, new Velocity
         {
             // set Bullet velocity to be Players forward
-            Value = math.mul(player.Transform.Rotation, new float3(0,1,0))
+            Value = math.mul(playerTransform.Rotation, new float3(0,1,0))
         });
     }
 }

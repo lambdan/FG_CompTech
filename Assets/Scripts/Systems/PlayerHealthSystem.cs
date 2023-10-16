@@ -26,7 +26,7 @@ public partial struct PlayerHealthSystem : ISystem
             return; // hit invincibility in effect, nothing to do
         }
 
-        var playerPos = SystemAPI.GetSingleton<Player>().Transform.Position;
+         var playerPos = SystemAPI.GetComponentRO<LocalTransform>(SystemAPI.GetSingleton<Player>().Entity).ValueRO.Position;
         
         foreach (var enemyTransform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Enemy>())
         {
@@ -48,7 +48,7 @@ public partial struct PlayerHealthSystem : ISystem
                 // TODO maybe trigger game over from here?
 
                 // destroy the player
-                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(SystemAPI.GetSingleton<Player>().entity);
+                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(SystemAPI.GetSingleton<Player>().Entity);
             }
             
             return; // we took damage, dont need to check for any other enemies (since we're in invincibiliy time anyway)
