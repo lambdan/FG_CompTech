@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 
 public partial struct PlayerHealthSystem : ISystem
@@ -40,6 +41,15 @@ public partial struct PlayerHealthSystem : ISystem
             var playerHealth = SystemAPI.GetSingletonRW<PlayerHealth>(); // here we get RW singleton
             playerHealth.ValueRW.Health -= 1;
             playerHealth.ValueRW.LastHitTime = SystemAPI.Time.ElapsedTime;
+
+            if (playerHealth.ValueRO.Health <= 0)
+            {
+                Debug.Log("Player is dead! Game over!");
+                // TODO maybe trigger game over from here?
+
+                // destroy the player
+                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(SystemAPI.GetSingleton<Player>().entity);
+            }
             
             return; // we took damage, dont need to check for any other enemies (since we're in invincibiliy time anyway)
         }

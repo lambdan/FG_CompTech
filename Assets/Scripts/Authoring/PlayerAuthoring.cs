@@ -11,7 +11,10 @@ public class PlayerAuthoring : MonoBehaviour
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
 
-            AddComponent(entity, new Player{});
+            AddComponent(entity, new Player
+            {
+                entity = entity
+            });
             
             AddComponent(entity, new PlayerHealth
             {
@@ -30,6 +33,7 @@ public class PlayerAuthoring : MonoBehaviour
 
 public struct Player : IComponentData
 {
+    public Entity entity;
     public LocalTransform Transform;
     public float3 Forward;
 }

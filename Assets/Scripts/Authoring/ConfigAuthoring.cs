@@ -9,7 +9,8 @@ public class ConfigAuthoring : MonoBehaviour
     public GameObject EnemyPrefab;
     public GameObject BulletPrefab;
 
-    [Header("Player Params")]
+    [Header("Player Params")] 
+    public int PlayerHealth = 100;
     public float PlayerSpeed = 1;
     public float PlayerRotationSpeed = 2;
     public float PlayerHitInvincibilitySeconds = 1.0f;
@@ -51,7 +52,8 @@ public class ConfigAuthoring : MonoBehaviour
                 DestroyBulletOnImpact = authoring.DestroyBulletOnImpact,
                 BulletSpawnForwardOffset = authoring.BulletSpawnForwardOffset,
                 FireCooldown = authoring.FireCooldown,
-                PlayerHitInvincibilitySeconds = authoring.PlayerHitInvincibilitySeconds
+                PlayerHitInvincibilitySeconds = authoring.PlayerHitInvincibilitySeconds,
+                PlayerHealth = authoring.PlayerHealth
             });
         }
     }
@@ -74,5 +76,6 @@ public struct Config : IComponentData
     public float3 BulletSpawnForwardOffset;
     public float FireCooldown;
     public float PlayerHitInvincibilitySeconds;
+    public int PlayerHealth;
 
 }
