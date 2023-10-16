@@ -21,10 +21,8 @@ public partial struct EnemyMoveSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();
-        var playertf = SystemAPI.GetSingleton<Player>().Transform;
-        var playerPos = playertf.Position;
-
-
+        var playerPos = SystemAPI.GetSingleton<Player>().Transform.Position;
+        
         foreach (var enemyTransform in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<Enemy>())
         {
             // set direction towards player
