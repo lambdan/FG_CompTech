@@ -8,9 +8,8 @@ using Random = Unity.Mathematics.Random;
 [UpdateBefore(typeof(TransformSystemGroup))]
 public partial struct EnemyMoveSystem : ISystem
 {
-    private uint randomCounter;
-    private float3 dir;
-    
+    private uint _randomCounter;
+
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
@@ -22,41 +21,32 @@ public partial struct EnemyMoveSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();
-        
-        RefRO<LocalTransform> playerTransform = default;
+        var playertf = SystemAPI.GetSingleton<Player>().Transform;
+        var playerPos = playertf.Position;
 
-        foreach (var transform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Player>())
+
+        foreach (var enemyTransform in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<Enemy>())
         {
-            playerTransform = transform;
-        }
-
-
-        foreach (var (transform,entity) in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<Enemy>().WithEntityAccess())
-        {
-            var playerPos = playerTransform.ValueRO.Position;
-            dir = math.normalizesafe(playerPos - transform.ValueRO.Position);
+            // set direction towards player
+            var dir = math.normalizesafe(playerPos - enemyTransform.ValueRO.Position);
             
             // jitter
             if (config.EnemyJitter)
             {
-               dir += Random.CreateFromIndex(++randomCounter).NextFloat(-1f, 1f) * new float3(1, 1, 0); 
+               dir += Random.CreateFromIndex(++_randomCounter).NextFloat(-1f, 1f) * new float3(1, 1, 0); 
             }
 
-            transform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * config.EnemySpeed;
+            enemyTransform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * config.EnemySpeed;
 
-            var distanceToPlayer = math.distance(playerPos, transform.ValueRO.Position);
+            var distanceToPlayer = math.distance(playerPos, enemyTransform.ValueRO.Position);
             if (distanceToPlayer < 0.1f)
             {
                 // decrement player HP
-                
-                // TODO there must be a better way !!!
-                foreach(var h in SystemAPI.Query<RefRW<PlayerHealth>>().WithAll<Player>())
+                var ph = SystemAPI.GetSingletonRW<PlayerHealth>();
+                if (ph.ValueRO.LastDamage + 1 < SystemAPI.Time.ElapsedTime) // TODO feels cursed to do player damage cooldown here
                 {
-                    if (h.ValueRO.LastDamage + 1 < SystemAPI.Time.ElapsedTime) // TODO feels cursed to do player damage cooldown here
-                    {
-                        h.ValueRW.Health -= 1;
-                        h.ValueRW.LastDamage = SystemAPI.Time.ElapsedTime;
-                    }
+                    ph.ValueRW.Health -= 1;
+                    ph.ValueRW.LastDamage = SystemAPI.Time.ElapsedTime;
                 }
             }
         }
