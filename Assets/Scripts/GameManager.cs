@@ -58,12 +58,6 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void AddKill()
-    {
-        _kills += 1;
-        UpdateKillsText();
-    }
-
     private void UpdateActiveEnemiesText()
     {
         int q = _entityManager.CreateEntityQuery(typeof(Enemy)).CalculateEntityCount();
@@ -83,13 +77,17 @@ public class GameManager : MonoBehaviour
 
     public void UpdateHealthText()
     {
-        // TODO cache stuff
+        // TODO cache stuff (can probably get Player entity, then get HealthSystem from there
         EntityQuery q = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
         if (q.TryGetSingleton<PlayerHealth>(out PlayerHealth p))
         {
             _healthText.text = "Health: " + p.Health;
 
         }
+        else if(!_healthText.text.Contains("X")){ // works because placeholder text is X/3 lol
+            GameOver();
+        }
+
     }
     
     public void GameOver()

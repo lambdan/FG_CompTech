@@ -17,6 +17,8 @@ public partial struct InitializationSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();
+        
+        // set starting health
         SystemAPI.GetSingletonRW<PlayerHealth>().ValueRW.Health = config.PlayerHealth;
 
         Debug.Log("Initialization done");

@@ -18,8 +18,6 @@ public class PlayerAuthoring : MonoBehaviour
             
             AddComponent(entity, new PlayerHealth
             {
-                Health = 100,
-                LastHitTime = 0
             });
             
             AddComponent(entity, new PlayerStats
