@@ -1,19 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Unity.VisualScripting;
-using UnityEngine;
-using Random = Unity.Mathematics.Random;
 
 
 public partial struct BulletDamageSystem : ISystem
 {
-    private EntityCommandBuffer ecb;
-
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<Config>();
@@ -23,9 +14,7 @@ public partial struct BulletDamageSystem : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-
         var config = SystemAPI.GetSingleton<Config>();
-        ecb = new EntityCommandBuffer(Allocator.Temp);
         
         foreach(var (bulletTransform, bulletEntity) in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Bullet>().WithEntityAccess())
         {
@@ -39,17 +28,16 @@ public partial struct BulletDamageSystem : ISystem
                     continue;
                 }
                 
+                // hitting enemy
                 if (config.DestroyBulletOnImpact) { 
-                    ecb.DestroyEntity(bulletEntity);
+                    SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(bulletEntity);
                 }
                 
-                ecb.DestroyEntity(enemyEntity);
+                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(enemyEntity);
 
             }
         }
         
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
     }
 
 

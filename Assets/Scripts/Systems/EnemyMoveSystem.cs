@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Unity.VisualScripting;
-using UnityEngine;
 using Random = Unity.Mathematics.Random;
 
 
@@ -15,9 +10,7 @@ public partial struct EnemyMoveSystem : ISystem
 {
     private uint randomCounter;
     private float3 dir;
-
-    private EntityCommandBuffer ecb;
-
+    
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
@@ -29,7 +22,6 @@ public partial struct EnemyMoveSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();
-        ecb = new EntityCommandBuffer(Allocator.Temp);
         
         RefRO<LocalTransform> playerTransform = default;
 
@@ -66,15 +58,8 @@ public partial struct EnemyMoveSystem : ISystem
                         h.ValueRW.LastDamage = SystemAPI.Time.ElapsedTime;
                     }
                 }
-                
-                // ecb.DestroyEntity(entity); // queue ourselves to be destroyed
-
             }
-
         }
-
-        ecb.Playback(state.EntityManager);
-        ecb.Dispose();
     }
 
 
