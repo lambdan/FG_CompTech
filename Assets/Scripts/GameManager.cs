@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
 
     private World _world;
     private EntityManager _entityManager;
+    private EntityQuery q;
 
 
     void Awake()
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
     {
         _world = World.DefaultGameObjectInjectionWorld;
         _entityManager = _world.EntityManager;
+        q = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
         
         _kills = 0;
         _gameOver = false;
@@ -78,7 +80,7 @@ public class GameManager : MonoBehaviour
     public void UpdateHealthText()
     {
         // TODO cache stuff (can probably get Player entity, then get HealthSystem from there
-        EntityQuery q = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
+        
         if (q.TryGetSingleton<PlayerHealth>(out PlayerHealth p))
         {
             _healthText.text = "Health: " + p.Health;

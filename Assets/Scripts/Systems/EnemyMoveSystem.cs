@@ -13,6 +13,7 @@ public partial struct EnemyMoveSystem : ISystem
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
+        state.RequireForUpdate<Config>();
         state.RequireForUpdate<Player>();
         state.RequireForUpdate<Enemy>();
     }

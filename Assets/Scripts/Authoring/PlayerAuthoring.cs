@@ -18,6 +18,7 @@ public class PlayerAuthoring : MonoBehaviour
             
             AddComponent(entity, new PlayerHealth
             {
+                Entity = entity
             });
             
             AddComponent(entity, new PlayerStats
@@ -36,6 +37,7 @@ public struct Player : IComponentData
 
 public struct PlayerHealth : IComponentData
 {
+    public Entity Entity;
     public int Health;
     public double LastHitTime;
 }

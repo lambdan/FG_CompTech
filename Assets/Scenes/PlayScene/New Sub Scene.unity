@@ -155,7 +155,7 @@ MonoBehaviour:
   PlayerPrefab: {fileID: 3911293155193878859, guid: 8b21bd5ad74861743b87540d9a4d6a7a, type: 3}
   EnemyPrefab: {fileID: 3911293155193878859, guid: 411c186780c8c134e922b60391a84364, type: 3}
   BulletPrefab: {fileID: 7830648850807002804, guid: ba66f2436ce2725478b57b8cc43b0e5e, type: 3}
-  PlayerHealth: 3
+  PlayerHealth: 100
   PlayerSpeed: 5
   PlayerRotationSpeed: 5
   PlayerHitInvincibilitySeconds: 1
@@ -163,9 +163,9 @@ MonoBehaviour:
   DestroyBulletOnImpact: 0
   BulletSpawnForwardOffset: 0.2
   FireCooldown: 0.02
-  EnemySpawnAmount: 100
+  EnemySpawnAmount: 200
   EnemySpawnFrequency: 0.1
-  EnemySpawnRadius: 5
+  EnemySpawnRadius: 7
   EnemySpeed: 1.5
   EnemyJitter: 0
 --- !u!4 &910530261

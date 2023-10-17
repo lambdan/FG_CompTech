@@ -5,6 +5,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 [UpdateBefore(typeof(TransformSystemGroup))]
+[UpdateBefore(typeof(EnemyMoveSystem))]
 public partial struct BulletSpawnerSystem : ISystem
 {
     private double _lastFire; // used for cooldown checking

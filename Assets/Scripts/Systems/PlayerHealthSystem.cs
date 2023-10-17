@@ -12,7 +12,6 @@ public partial struct PlayerHealthSystem : ISystem
     {
         state.RequireForUpdate<Config>();
         state.RequireForUpdate<Enemy>();
-        state.RequireForUpdate<Player>();
         state.RequireForUpdate<PlayerHealth>();
     }
 
@@ -21,12 +20,14 @@ public partial struct PlayerHealthSystem : ISystem
     {
         var config = SystemAPI.GetSingleton<Config>();
 
-        if (SystemAPI.GetSingleton<PlayerHealth>().LastHitTime + config.PlayerHitInvincibilitySeconds > SystemAPI.Time.ElapsedTime)
+        var playerHealth = SystemAPI.GetSingletonRW<PlayerHealth>();
+
+        if (playerHealth.ValueRO.LastHitTime + config.PlayerHitInvincibilitySeconds > SystemAPI.Time.ElapsedTime)
         {
             return; // hit invincibility in effect, nothing to do
         }
 
-        var playerPos = SystemAPI.GetComponentRO<LocalTransform>(SystemAPI.GetSingleton<Player>().Entity).ValueRO.Position;
+        var playerPos = SystemAPI.GetComponentRO<LocalTransform>(playerHealth.ValueRO.Entity).ValueRO.Position;
 
         foreach (var enemyTransform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Enemy>())
         {
@@ -38,7 +39,6 @@ public partial struct PlayerHealthSystem : ISystem
             }
 
             // enemy hit us
-            var playerHealth = SystemAPI.GetSingletonRW<PlayerHealth>(); // here we get RW singleton
             playerHealth.ValueRW.Health -= 1;
             playerHealth.ValueRW.LastHitTime = SystemAPI.Time.ElapsedTime;
 
@@ -46,7 +46,7 @@ public partial struct PlayerHealthSystem : ISystem
             {
                 Debug.Log("Player is dead! Game over!");
                 // destroy the player
-                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(SystemAPI.GetSingleton<Player>().Entity);
+                SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(playerHealth.ValueRO.Entity);
             }
 
             return; // we took damage, dont need to check for any other enemies (since we're in invincibiliy time anyway)
