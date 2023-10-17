@@ -1,3 +1,4 @@
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -5,6 +6,7 @@ using Unity.Transforms;
 
 public partial struct BulletDamageSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<Config>();
@@ -12,6 +14,7 @@ public partial struct BulletDamageSystem : ISystem
         state.RequireForUpdate<Enemy>();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var config = SystemAPI.GetSingleton<Config>();

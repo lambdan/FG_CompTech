@@ -165,7 +165,7 @@ MonoBehaviour:
   FireCooldown: 0.02
   EnemySpawnAmount: 200
   EnemySpawnFrequency: 0.1
-  EnemySpawnRadius: 7
+  EnemySpawnRadius: 10
   EnemySpeed: 1.5
   EnemyJitter: 0
 --- !u!4 &910530261
