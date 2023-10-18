@@ -2,7 +2,6 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [UpdateBefore(typeof(TransformSystemGroup))]
@@ -10,14 +9,12 @@ using UnityEngine;
 public partial struct BulletSpawnerSystem : ISystem
 {
     private double _lastFire; // used for cooldown checking
-    private ComponentLookup<Bullet> _bulletLookup;
     
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<Player>();
         state.RequireForUpdate<Config>();
-        _bulletLookup = state.GetComponentLookup<Bullet>();
     }
 
     [BurstCompile]
@@ -38,31 +35,12 @@ public partial struct BulletSpawnerSystem : ISystem
         }
         
         _lastFire = SystemAPI.Time.ElapsedTime;
+
         var playerTransform = SystemAPI.GetComponentRO<LocalTransform>(SystemAPI.GetSingleton<Player>().Entity).ValueRO;
-
-        _bulletLookup.Update(ref state);
         
-        foreach (var bulletTag in SystemAPI.Query<Bullet>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState))
-        {
-            bool enabled = _bulletLookup.IsComponentEnabled(bulletTag.Entity);
-            if (!enabled)
-            {
-                // Debug.Log("re-using disabled bullet");
-                SetBulletDirectionSpeed(state, config, bulletTag.Entity, playerTransform);
-                _bulletLookup.SetComponentEnabled(bulletTag.Entity, true);
-                return;
-            }
-        }
+        var bullet = state.EntityManager.Instantiate(config.BulletPrefab);
         
-        // no bullet were available, we have to spawn one
-        var newBullet = state.EntityManager.Instantiate(config.BulletPrefab);
-        SetBulletDirectionSpeed(state, config, newBullet, playerTransform);
-        // Debug.Log("spawned bullet");
-    }
-
-    [BurstCompile]
-    public void SetBulletDirectionSpeed(SystemState state, Config config, Entity bullet, LocalTransform playerTransform)
-    {
+        
         state.EntityManager.SetComponentData(bullet, new LocalTransform
         {
             Position = playerTransform.Position + (playerTransform.Forward() * config.BulletSpawnForwardOffset),
