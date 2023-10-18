@@ -9,14 +9,18 @@ public class BulletAuthoring : MonoBehaviour
         public override void Bake(BulletAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<Bullet>(entity);
+            AddComponent(entity, new Bullet
+            {
+                Entity = entity
+            });
             AddComponent<Velocity>(entity);
         }
     }
 }
 
-public struct Bullet : IComponentData
+public struct Bullet : IComponentData, IEnableableComponent
 {
+    public Entity Entity;
     // maybe keep instigator here?
 }
 

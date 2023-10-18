@@ -5,6 +5,7 @@ using Unity.Transforms;
 using UnityEngine;
 
 
+[UpdateBefore(typeof(EnemyMoveSystem))]
 public partial struct BulletDamageSystem : ISystem
 {
     [BurstCompile]
