@@ -73,8 +73,45 @@ I tested this and was *blown away* by the performance. I had to significantly bu
 
 After I had the enemies figured out I converted PlayerMovement. I was afraid this was gonna be very complicated but no it was actually surprisingly simple, as you have access to the regular `Input.GetAxis` functions and such inside ECS, so I got that taken care of quickly. It also helps that I now understood Entities and Systems much better than the day before.
 
-TODO: 
+Eventually I had everything converted to be entity based. The *only MonoBehaviour I have now is the GameManager*, and basically the only thing that does is update the UI and handle keypresses for restarting and quitting the game.
 
-- Write about vector distance vs math.abs (profile it)
-- Bullets, (how i tried pooling)
-- GameManager being the only mono behaviour now
+### Optimizations
+
+#### math.abs(x-x, y-y) vs math.distancesq
+
+To check the distance between bullets and enemies, and enemies and the player, I originally used this:
+
+
+```
+var bulletPos = bulletTransform.ValueRO.Position;
+var enemyPos = enemyTransform.ValueRO.Position;
+
+if(math.abs(bulletPos.x - enemyPos.x) > 0.1f || math.abs(bulletPos.y - enemyPos.y)){
+    continue; // bullet too far away from enemy, nothing to do
+}
+```
+
+I used this approach because when I did my [Hidden Packages mod for Cyberpunk 2077](https://www.nexusmods.com/cyberpunk2077/mods/3586) I found that calculating the exact Vector distance was pretty heavy, especially for players on older CPU's, so in that mod I switched to first checking if the player was in the vicinity of a package by just checking the X coordinates first, and if that was close enough I checked Y, and if that was also close enough then I finally started calculating exact distances. 
+So I figured the same applied here.
+
+But eventually I started googling about this and found some users saying that the `math.distancesq` function is less expensive. It would also let me cache less, so I tried it, and yep, it was better + it allowed for much cleaner code:
+
+```
+if(math.distancesq(bulletTransform.ValueRO.Position,enemyTransform.ValueRO.Position) > 0.1f)
+{
+    continue;
+}
+```
+
+#### Pooling
+
+While Instantiating entities is very fast in ECS, I decided to look into pooling anyway because DOTS 1.0 has `IEnableableComponent` which seemed somewhat easy to work with.
+
+I did convert bullets to be pooled, but the performance improvement was negligible or none, so I reverted it: https://github.com/lambdan/FG_CompTech/commit/84fd8f6f59c404e5300176a44f7ef0642b7fb141
+
+I also looked into pooling the enemies but it just created a whole bunch of new problems, and the performance improvement was still negligible or none. Also from my googling object pooling in ECS really isn't worth it seems to be consensus, so I decided to not pool enemies either.
+
+I guess that's the one good thing I can say about ECS: its so fast you don't need to pool.
+
+
+
