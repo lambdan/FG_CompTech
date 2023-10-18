@@ -63,8 +63,8 @@ public class GameManager : MonoBehaviour
     private void UpdateActiveEnemiesText()
     {
         int active = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>()).CalculateEntityCount();
-        int inactive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>(), ComponentType.ReadOnly<Disabled>()).CalculateEntityCount();
-        _activeEnemiesText.text = "Enemies: " + active + " (disabled: " + inactive + ")";
+        // int inactive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>(), ComponentType.ReadOnly<Disabled>()).CalculateEntityCount();
+        _activeEnemiesText.text = "Enemies: " + active;// + " (disabled: " + inactive + ")";
     }
     
     private void UpdateActiveBulletsText()
