@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 
 public partial struct BulletDamageSystem : ISystem
@@ -23,10 +24,7 @@ public partial struct BulletDamageSystem : ISystem
         {
             foreach (var (enemyTransform, enemyEntity) in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Enemy>().WithEntityAccess())
             {
-                var bulletPos = bulletTransform.ValueRO.Position;
-                var enemyPos = enemyTransform.ValueRO.Position;
-                
-                if (math.abs(bulletPos.x - enemyPos.x) > 0.1f || math.abs(bulletPos.y - enemyPos.y) > 0.1f)
+                if(math.distancesq(bulletTransform.ValueRO.Position,enemyTransform.ValueRO.Position) > 0.1f)
                 {
                     continue;
                 }

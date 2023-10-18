@@ -28,6 +28,9 @@ public partial struct EnemySpawnerSystem : ISystem
             {
                 Entity e = state.EntityManager.Instantiate(config.EnemyPrefab);
 
+                // TODO maybe spawn using commandbuffer instead (cant set position here then though)
+                // Entity e = SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).Instantiate(config.EnemyPrefab);
+
                 float angle = angleSpacing * i;
                 float x = config.EnemySpawnRadius * math.cos(angle);
                 float y = config.EnemySpawnRadius * math.sin(angle);

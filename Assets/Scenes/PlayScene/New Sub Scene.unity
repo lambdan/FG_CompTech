@@ -162,7 +162,7 @@ MonoBehaviour:
   BulletSpeed: 10
   DestroyBulletOnImpact: 0
   BulletSpawnForwardOffset: 0.2
-  FireCooldown: 0.02
+  FireCooldown: 0.01
   EnemySpawnAmount: 200
   EnemySpawnFrequency: 0.1
   EnemySpawnRadius: 10

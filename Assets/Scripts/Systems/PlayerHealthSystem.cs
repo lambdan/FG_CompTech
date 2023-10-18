@@ -31,9 +31,7 @@ public partial struct PlayerHealthSystem : ISystem
 
         foreach (var enemyTransform in SystemAPI.Query<RefRO<LocalTransform>>().WithAll<Enemy>())
         {
-            var enemyPos = enemyTransform.ValueRO.Position;
-
-            if (math.abs(playerPos.x - enemyPos.x) > 0.1f || math.abs(playerPos.y - enemyPos.y) > 0.1f)
+            if(math.distancesq(playerPos,enemyTransform.ValueRO.Position) > 0.1f)
             {
                 continue;
             }
