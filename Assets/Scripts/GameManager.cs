@@ -62,13 +62,14 @@ public class GameManager : MonoBehaviour
     
     private void UpdateActiveEnemiesText()
     {
-        int q = _entityManager.CreateEntityQuery(typeof(Enemy)).CalculateEntityCount();
-        _activeEnemiesText.text = "Active Enemies: " + q;
+        int active = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>()).CalculateEntityCount();
+        int inactive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>(), ComponentType.ReadOnly<Disabled>()).CalculateEntityCount();
+        _activeEnemiesText.text = "Enemies: " + active + " (disabled: " + inactive + ")";
     }
     
     private void UpdateActiveBulletsText()
     {
-        var q = _entityManager.CreateEntityQuery(typeof(Bullet)).CalculateEntityCount();
+        var q = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bullet>()).CalculateEntityCount();
         _bulletsActiveText.text = "Bullets Active: " + q;
     }
 
