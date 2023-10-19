@@ -73,7 +73,7 @@ I set up a Enemy prefab which had a `EnemyAuthoring` script on it, and then I se
 
 Initially the EnemyMovement script also did a lot of other things too (like damaing the player) but I later learned/came to the conclusion that each system should do as little as possible to maintain readability.
 
-I tested this and was *blown away* by the performance. I had to significantly bump up the spawn rate of enemies and make them much smaller to not have them fill up the screen immediately (this is why in the "pre-optimization" build they're big hexagons, and now in this optimized build they are tiny dots).
+I tested this and was *blown away* by the performance. I had to significantly bump up the spawn rate of enemies and make them much smaller to not have them fill up the screen immediately (this is why in the non-DOTS build they're big hexagons, and now in this optimized build they are tiny little dots).
 
 After I had the enemies figured out I converted PlayerMovement. I was afraid this was gonna be very complicated but no it was actually surprisingly simple, as you have access to the regular `Input.GetAxis` functions and such inside ECS, so I got that taken care of quickly. It also helps that I now understood Entities and Systems much better than the day before.
 
@@ -107,13 +107,13 @@ if(math.distancesq(bulletTransform.ValueRO.Position,enemyTransform.ValueRO.Posit
 }
 ```
 
-### Pooling
+### ~~Pooling~~
 
 While Instantiating entities is very fast in ECS, I decided to look into pooling anyway because DOTS 1.0 has `IEnableableComponent` which seemed somewhat easy to work with.
 
-I did convert bullets to be pooled, but the performance improvement was negligible or none, so I reverted it: https://github.com/lambdan/FG_CompTech/commit/84fd8f6f59c404e5300176a44f7ef0642b7fb141
+I did convert bullets to be pooled, but the performance improvement was pretty much none, so [I reverted it](https://github.com/lambdan/FG_CompTech/commit/84fd8f6f59c404e5300176a44f7ef0642b7fb141).
 
-I also looked into pooling the enemies but it just created a whole bunch of new problems, and the performance improvement was still negligible or none. Also from my googling object pooling in ECS really isn't worth it seems to be consensus, so I decided to not pool enemies either.
+I also looked into pooling the enemies but it just created a whole bunch of new problems, and the performance improvement was still negligible or none. Also from my googling object pooling in ECS really isn't worth it seems to be [consensus](https://forum.unity.com/threads/is-there-a-performance-hit-for-thousands-of-disabled-entities-floating-around-about-entity-pooling.1168916/#post-7488950) (instantiating/destroy entities is as fast as toggling their enabled state), so I decided to not pool enemies either. It just made the code much less readable and maintainable for nothing in return.
 
 I guess that's the one good thing I can say about ECS: its so fast you don't need to pool.
 
@@ -154,6 +154,3 @@ We have to dig quite deep to finally find one of our systems. The heaviest syste
 ![profiler system dots](https://djsimg.org/Detailed-Pungent-Narwhal.png)
 
 So, now with DOTS our space shooter is hella fast. In an actual game you would probably never end up in a situation with 30000+ enemies on screen at once... But it's interesting to know it possible. Will be interesting to see in the coming years what kind of bullet hell shooters are gonna be made using this.
-
-# Why is DOTS fast?
-
