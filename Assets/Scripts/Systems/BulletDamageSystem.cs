@@ -4,7 +4,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-
+[UpdateBefore(typeof(EnemyMoveSystem))]
 public partial struct BulletDamageSystem : ISystem
 {
     [BurstCompile]
@@ -30,12 +30,12 @@ public partial struct BulletDamageSystem : ISystem
                 }
                 
                 // hitting enemy
+                
                 if (config.DestroyBulletOnImpact) { 
                     SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(bulletEntity);
                 }
                 
                 SystemAPI.GetSingleton<BeginInitializationEntityCommandBufferSystem.Singleton>().CreateCommandBuffer(state.WorldUnmanaged).DestroyEntity(enemyEntity);
-
             }
         }
         

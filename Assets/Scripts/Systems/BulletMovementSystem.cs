@@ -3,7 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-[UpdateBefore(typeof(TransformSystemGroup))]
+[UpdateBefore(typeof(BulletDamageSystem))]
 public partial struct BulletMovementSystem : ISystem
 {
     [BurstCompile]

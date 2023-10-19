@@ -18,9 +18,7 @@ A simple space shooter. It was first made in Unity using regular GameObjects and
 
 ------------------------------------
 
-# Making the Game
-
-## "Not DOTS"-version
+# Non-DOTS Version
 
 I first started off making the game using my regular Unity knowledge. I made the enemies prefabs, spawned them in, made them move using their own Movement scripts, saved references wherever possible, and so on. 
 
@@ -35,6 +33,12 @@ Here are the performance numbers for the "Not DOTS"-version, when played in a bu
 |Yes|120 FPS (VSync limit)|5 FPS|?|?|?|Seems to hit some kind of hard limit at 2000 enemies, making the framerate insufferable
 |No|120 FPS (VSync limit)|120 FPS (VSync limit)|115|50|<30 FPS|
 
+Also take a peek at the Windows Task Manager. It might not be super accurate, but its anecdotally interesting. Note how only 1 thread seems to be really used.
+
+![No DOTS taskmgr](https://djsimg.org/Superficial-Embellished-Guillemot.png)
+
+(This screenshot was taken when there was around ~30000 enemies on screen, when it seems to use the most CPU. CPU Usage starts going down when there are more enemies as the FPS goes down and the game starts updating less frequently)
+
 If we look at the profiler inside Unity when there are around 25000 enemies on screen (ignoring the Physics version, as Physics is the obvious culprit there) we can see that the biggest culprit is the enemies movement, which makes sense as there are a lot of enemies that need to be moved:
 
 ![Enemy Movement Profiler](https://djsimg.org/Forceful-Downright-Ilsamochadegu.png)
@@ -47,11 +51,11 @@ The render taking up 0.7% is not very interesting right now but keep it in mind 
 
 Now that I had a base game running and a baseline, I went off to convert the game to DOTS. I didn't bother doing any optimization of the regular GameObject/MonoBehaviour approach (such as Object Pooling) as I knew investing my time in learning DOTS would be more beneficial.
 
-## DOTS Version
+# DOTS Version
 
 Having never used DOTS, ECS, or anything related to these systems I first had to figure out how all this works and what it is. I found that programming in DOTS requires a very different mindset which takes a while to get used to.
 
-### Rant About Terrible DOTS Documentation
+## Rant About Terrible DOTS Documentation
 
 I very quickly ran into issues. Googling for things about DOTS is not easy, because people use different terms (some people just say ECS, which is one part of DOTS, for example), and sometimes you get results for "regular" MonoBehaviour approach. On top of that, DOTS changed a lot over the years. I believe the first version came out sometime around 2019, and it changed a lot since then for the 1.0 version we have now.
 
@@ -62,7 +66,7 @@ I finally found Unity's own [Kickball](https://github.com/Unity-Technologies/Ent
 I learned that there were two kinds of systems you could use with ECS: `SystemBase` and `ISystem`. As I understood it, ISystem was better for performance, so I stuck with that.
 I also learned about the Burst compiler, and learned that not everything is compatible with Burst (especially when interacting with MonoBehaviour), so I set my goal to have everything use ISystem and be Burst compatible, for maximum performance.
 
-### Conversion
+## Conversion
 
 The first thing I converted was the enemies movement and spawning, knowing that enemy movement was the biggest culprit. 
 I set up a Enemy prefab which had a `EnemyAuthoring` script on it, and then I set up two systems: one for spawning and one for enemy movement.
@@ -75,9 +79,9 @@ After I had the enemies figured out I converted PlayerMovement. I was afraid thi
 
 Eventually I had everything converted to be entity based. The *only MonoBehaviour I have now is the GameManager*, and basically the only thing that does is update the UI and handle keypresses for restarting and quitting the game.
 
-### Optimizations
+## Optimizations
 
-#### math.abs(x-x, y-y) vs math.distancesq
+### math.abs(x-x, y-y) vs math.distancesq
 
 To check the distance between bullets and enemies, and enemies and the player, I originally used this:
 
@@ -103,7 +107,7 @@ if(math.distancesq(bulletTransform.ValueRO.Position,enemyTransform.ValueRO.Posit
 }
 ```
 
-#### Pooling
+### Pooling
 
 While Instantiating entities is very fast in ECS, I decided to look into pooling anyway because DOTS 1.0 has `IEnableableComponent` which seemed somewhat easy to work with.
 
@@ -113,5 +117,43 @@ I also looked into pooling the enemies but it just created a whole bunch of new 
 
 I guess that's the one good thing I can say about ECS: its so fast you don't need to pool.
 
+## Final Result
 
+So finally, what is the performance using DOTS? As previously, let look at it in a build first:
+
+|Enemies|Average FPS|Commment|
+|-------|---|--------|
+|1000|120 (VSync Limit)||
+|10000|120 (VSync Limit)||
+|20000|120 (VSync Limit)||
+|30000|120 (VSync Limit)||
+|40000|86||
+|50000|65||
+|60000|47||
+|70000|38||
+|80000|32||
+|90000|27|Finally under 30 FPS!|
+|100000|25||
+|150000|15||
+|200000|11||
+|300000|7||
+|400000|5||
+
+Now look at our Windows Task Manager. We now seem to use all threads in our processor (makes me really curious to run the game on a Threadripper or similar CPU that has a ridiculous amount of CPU cores/threads)
+
+![CPU Taskmgr](https://djsimg.org/Outlying-Definitive-Xantusmurrelet.png)
+
+Finally lets look at the profiler inside Unity again. Lets do it with 25000 enemies as we did previously:
+
+![profiler with dots](https://djsimg.org/Insignificant-Lovable-Nightingale.png)
+
+Thing that takes most time is now the renderer. This might seem weird, but it makes sense actually, as our game now runs at a much higher framerate than it did previously. Previously the renderer had to wait for other tasks. 
+
+We have to dig quite deep to finally find one of our systems. The heaviest system is the spawn system, but its 2.69 ms is still nothing compared to the 832 ms the EnemyShips had in the old non-DOTS version. 
+
+![profiler system dots](https://djsimg.org/Detailed-Pungent-Narwhal.png)
+
+So, now with DOTS our space shooter is hella fast. In an actual game you would probably never end up in a situation with 30000+ enemies on screen at once... But it's interesting to know it possible. Will be interesting to see in the coming years what kind of bullet hell shooters are gonna be made using this.
+
+# Why is DOTS fast?
 
