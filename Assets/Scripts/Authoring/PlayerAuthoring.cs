@@ -20,12 +20,7 @@ public class PlayerAuthoring : MonoBehaviour
             {
                 Entity = entity
             });
-            
-            AddComponent(entity, new PlayerStats
-            {
-                Kills = 0,
-                BulletsFired = 0
-            });
+
         }
     }
 }
@@ -40,10 +35,4 @@ public struct PlayerHealth : IComponentData
     public Entity Entity;
     public int Health;
     public double LastHitTime;
-}
-
-public struct PlayerStats : IComponentData
-{
-    public int Kills;
-    public int BulletsFired;
 }

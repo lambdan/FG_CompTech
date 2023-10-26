@@ -20,7 +20,7 @@ public partial struct BulletMovementSystem : ISystem
         
         foreach(var (bulletTransform, velocity, entity) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<Velocity>>().WithAll<Bullet>().WithEntityAccess())
         {
-            var newPos = bulletTransform.ValueRW.Position + (velocity.ValueRO.Value * SystemAPI.Time.DeltaTime * config.BulletSpeed);
+            var newPos = bulletTransform.ValueRO.Position + (velocity.ValueRO.Value * SystemAPI.Time.DeltaTime * config.BulletSpeed);
 
             if (math.abs(newPos.x) > 10 || math.abs(newPos.y) > 10) // off screen?
             {

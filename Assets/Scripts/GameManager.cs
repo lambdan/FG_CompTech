@@ -1,31 +1,25 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// this did a whole lot of things in non-DOTS version but now its basically just a HUD updater
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
-    [SerializeField] private TMP_Text _killsText;
     [SerializeField] private TMP_Text _healthText;
     [SerializeField] private TMP_Text _gameOverText;
     [SerializeField] private TMP_Text _activeEnemiesText;
     [SerializeField] private TMP_Text _bulletsActiveText;
 
     private int _activeEnemies;
-    private int _kills;
     private bool _gameOver;
 
     private World _world;
     private EntityManager _entityManager;
-    private EntityQuery q;
-
-
+    private EntityQuery _playerHealthQuery;
+    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -40,21 +34,18 @@ public class GameManager : MonoBehaviour
     {
         _world = World.DefaultGameObjectInjectionWorld;
         _entityManager = _world.EntityManager;
-        q = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
-        
-        _kills = 0;
-        _gameOver = false;
-        UpdateKillsText();
+        _playerHealthQuery = _entityManager.CreateEntityQuery(typeof(PlayerHealth));
+        _gameOver = true;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) // restart
+        if (Input.GetKeyDown(KeyCode.R)) // <R>estart
         {
             CleanAndRestartECS();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q)) // <Q>uit
         {
             Application.Quit();
         }
@@ -62,32 +53,24 @@ public class GameManager : MonoBehaviour
     
     private void UpdateActiveEnemiesText()
     {
-        int active = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>()).CalculateEntityCount();
-        // int inactive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>(), ComponentType.ReadOnly<Disabled>()).CalculateEntityCount();
-        _activeEnemiesText.text = "Enemies: " + active;// + " (disabled: " + inactive + ")";
+        int enemiesActive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Enemy>()).CalculateEntityCount();
+        _activeEnemiesText.text = "Enemies: " + enemiesActive;
     }
     
     private void UpdateActiveBulletsText()
     {
-        var q = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bullet>()).CalculateEntityCount();
-        _bulletsActiveText.text = "Bullets Active: " + q;
+        int bulletsActive = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<Bullet>()).CalculateEntityCount();
+        _bulletsActiveText.text = "Bullets Active: " + bulletsActive;
     }
-
-    public void UpdateKillsText()
-    {
-        _killsText.text = "Kills: " + _kills;
-    }
-
+    
     public void UpdateHealthText()
     {
-        // TODO cache stuff (can probably get Player entity, then get HealthSystem from there
-        
-        if (q.TryGetSingleton<PlayerHealth>(out PlayerHealth p))
+        if (_playerHealthQuery.TryGetSingleton(out PlayerHealth p))
         {
             _healthText.text = "Health: " + p.Health;
-
+            _gameOver = false;
         }
-        else if(!_healthText.text.Contains("X")){ // works because placeholder text is X/3 lol
+        else if(!_gameOver){ // we cant find player health anymore + game over was true = we must be dead
             GameOver();
         }
 
@@ -98,11 +81,6 @@ public class GameManager : MonoBehaviour
         _gameOver = true;
         _healthText.text = "Dead";
         _gameOverText.gameObject.SetActive(true);
-    }
-
-    public bool IsGameOver()
-    {
-        return _gameOver;
     }
 
     void OnGUI()
@@ -132,8 +110,7 @@ public class GameManager : MonoBehaviour
         {
             ScriptBehaviourUpdateOrder.AppendWorldToCurrentPlayerLoop(World.DefaultGameObjectInjectionWorld);
         }
-
-        // SceneManager.LoadScene("Game", LoadSceneMode.Single);
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -163,8 +163,8 @@ MonoBehaviour:
   DestroyBulletOnImpact: 0
   BulletSpawnForwardOffset: 0.2
   FireCooldown: 0.01
-  EnemySpawnAmount: 1000
-  EnemySpawnFrequency: 0.2
+  EnemySpawnAmount: 333
+  EnemySpawnFrequency: 0.1
   EnemySpawnRadius: 12
   EnemySpeed: 1.5
   EnemyJitter: 0
