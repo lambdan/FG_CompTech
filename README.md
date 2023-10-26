@@ -154,3 +154,15 @@ We have to dig quite deep to finally find one of our systems. The heaviest syste
 ![profiler system dots](https://djsimg.org/Detailed-Pungent-Narwhal.png)
 
 So, now with DOTS our space shooter is hella fast. In an actual game you would probably never end up in a situation with 30000+ enemies on screen at once... But it's interesting to know it possible. Will be interesting to see in the coming years what kind of bullet hell shooters are gonna be made using this.
+
+# What Makes DOTS So Fast?
+
+DOTS (**D**ata **O**riented **T**echnology **S**tack) is a buzzword for a bunch of packages and technologies you use to program a data-oriented game in Unity. It's not that you just install the packages and all of a sudden you can spawn 10000s of enemies without a hitch. You have to set up jobs and entities, and then you program everything from a data-oriented perspective, and then finally compile it using Burst. It's a combination of these many technologies that creates a game that performs extremely well.
+
+By making everything data oriented, it can be cached in memory next to each other, making it much faster for the computer to process through. 
+We then have the Burst compiler which translates the code to optimized native code for the CPU, which makes it even faster.
+And finally we have the C# Job Systems which means jobs can be set up to run in parallel, utilizing the many cores and threads of todays modern CPU's.
+
+So why isn't every game programmed around this approach? Well, it's a lot harder to work with. You have to have a different mindset when programming. Instead of thinking "I'll create a movement script for this enemy and give it to him, making him a wandering soul" you have to think more like "I'll create a movement *system* that will move all the enemies, making them all soulless enemies moved by one system". Once you can wrap you head around this approach it becomes a little bit easier, but then you find the next challenge of getting references to each other. You can not just willy-nilly get a reference to anything from anywhere. You have to think about it beforehand and set up the systems and entities appropriately. 
+If you're using Burst there are more considerations as well, as Burst compiled code has limitations on what it can access and do.
+
