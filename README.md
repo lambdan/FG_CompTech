@@ -153,6 +153,8 @@ We have to dig quite deep to finally find one of our systems. The heaviest syste
 
 ![profiler system dots](https://djsimg.org/Detailed-Pungent-Narwhal.png)
 
+**Also notice the 0.26ms the EnemyMoveSystem took.** This was prior to converting the enemy movement to job based. Now using a job system, it only takes **0.02 ms.**
+
 So, now with DOTS our space shooter is hella fast. In an actual game you would probably never end up in a situation with 30000+ enemies on screen at once... But it's interesting to know it possible. Will be interesting to see in the coming years what kind of bullet hell shooters are gonna be made using this.
 
 # What Makes DOTS So Fast?
