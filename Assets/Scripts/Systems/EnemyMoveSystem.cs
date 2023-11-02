@@ -23,22 +23,32 @@ public partial struct EnemyMoveSystem : ISystem
     {
         var config = SystemAPI.GetSingleton<Config>();
         var playerPos = SystemAPI.GetComponentRO<LocalTransform>(SystemAPI.GetSingleton<Player>().Entity).ValueRO.Position;
-        
-        foreach (var enemyTransform in SystemAPI.Query<RefRW<LocalTransform>>().WithAll<Enemy>())
-        {
-            // set direction towards player
-            var dir = math.normalizesafe(playerPos - enemyTransform.ValueRO.Position);
-            
-            // jitter
-            if (config.EnemyJitter)
-            {
-               dir += Random.CreateFromIndex(++_randomCounter).NextFloat(-1f, 1f) * new float3(1, 1, 0); 
-            }
 
-            enemyTransform.ValueRW.Position += dir * SystemAPI.Time.DeltaTime * config.EnemySpeed;
-        }
+        var job = new EnemyMovementJob
+        {
+            DeltaTime = SystemAPI.Time.DeltaTime,
+            PlayerPosition = playerPos,
+            Speed = config.EnemySpeed
+        };
+        job.ScheduleParallel();
+
     }
 
+
+    [WithAll(typeof(Enemy))]
+    [BurstCompile]
+    public partial struct EnemyMovementJob : IJobEntity
+    {
+        public float DeltaTime;
+        public float3 PlayerPosition;
+        public float Speed;
+        
+        public void Execute(ref LocalTransform enemyTransform)
+        {
+            var dir = math.normalizesafe(PlayerPosition - enemyTransform.Position);
+            enemyTransform.Position += (dir * Speed * DeltaTime);
+        }
+    }
 
 
 

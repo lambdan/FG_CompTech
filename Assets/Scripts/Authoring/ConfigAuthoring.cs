@@ -28,7 +28,7 @@ public class ConfigAuthoring : MonoBehaviour
 
     [Header("Enemy Params")]
     public float EnemySpeed = 1.5f;
-    public bool EnemyJitter = false;
+    // public bool EnemyJitter = false;
 
     class Baker : Baker<ConfigAuthoring>
     {
@@ -47,7 +47,7 @@ public class ConfigAuthoring : MonoBehaviour
                 EnemySpawnFrequency = authoring.EnemySpawnFrequency,
                 EnemySpawnRadius = authoring.EnemySpawnRadius,
                 EnemySpeed = authoring.EnemySpeed,
-                EnemyJitter = authoring.EnemyJitter,
+                // EnemyJitter = authoring.EnemyJitter,
                 BulletSpeed = authoring.BulletSpeed,
                 DestroyBulletOnImpact = authoring.DestroyBulletOnImpact,
                 BulletSpawnForwardOffset = authoring.BulletSpawnForwardOffset,
@@ -70,7 +70,7 @@ public struct Config : IComponentData
     public float EnemySpawnFrequency;
     public float EnemySpawnRadius;
     public float EnemySpeed;
-    public bool EnemyJitter;
+    // public bool EnemyJitter;
     public float BulletSpeed;
     public bool DestroyBulletOnImpact;
     public float3 BulletSpawnForwardOffset;
